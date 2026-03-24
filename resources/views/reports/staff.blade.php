@@ -8,17 +8,17 @@
 <div class="table-wrap">
     <table class="data-table">
         <thead>
-        <tr class="bg-gray-50 border-b border-gray-100">
-            <th class="text-left px-5 py-3 text-xs font-semibold text-muted uppercase">Staff Member</th>
-            <th class="text-left px-5 py-3 text-xs font-semibold text-muted uppercase hidden sm:table-cell">Role</th>
-            <th class="text-right px-5 py-3 text-xs font-semibold text-muted uppercase">Appointments</th>
-            <th class="text-right px-5 py-3 text-xs font-semibold text-muted uppercase">Revenue</th>
+        <tr>
+            <th class="text-left">Staff Member</th>
+            <th class="text-left hidden sm:table-cell">Role</th>
+            <th class="text-right">Appointments</th>
+            <th class="text-right">Revenue</th>
         </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        <tbody>
         @forelse($staff as $member)
-        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/40">
-            <td class="px-5 py-3.5">
+        <tr>
+            <td>
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
                          style="background-color: {{ $member->color ?? '#7C3AED' }}">
@@ -27,9 +27,9 @@
                     <a href="{{ route('staff.show', $member->id) }}" class="font-semibold text-velour-600 hover:underline">{{ $member->name }}</a>
                 </div>
             </td>
-            <td class="px-5 py-3.5 hidden sm:table-cell text-muted capitalize">{{ str_replace('_',' ',$member->role) }}</td>
-            <td class="px-5 py-3.5 text-right font-semibold text-gray-800">{{ $member->appointment_count ?? 0 }}</td>
-            <td class="px-5 py-3.5 text-right font-bold text-heading">Â£{{ number_format($member->total_revenue ?? 0, 2) }}</td>
+            <td class="hidden sm:table-cell text-muted capitalize">{{ str_replace('_',' ',$member->role) }}</td>
+            <td class="text-right font-semibold text-heading">{{ $member->appointment_count ?? 0 }}</td>
+            <td class="text-right font-bold text-heading">@money($member->total_revenue ?? 0)</td>
         </tr>
         @empty
         <tr><td colspan="4" class="px-5 py-8 text-center text-sm text-muted">No data</td></tr>
@@ -39,4 +39,3 @@
 </div>
 
 @endsection
-

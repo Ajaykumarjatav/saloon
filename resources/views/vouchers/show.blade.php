@@ -32,10 +32,10 @@
           @if($voucher->type === 'percentage')
             {{ $voucher->value }}%
           @elseif($voucher->type === 'gift_card')
-            £{{ number_format($voucher->remaining_balance, 2) }}
-            <span class="text-sm text-gray-400 font-normal">of £{{ number_format($voucher->value, 2) }}</span>
+            @money($voucher->remaining_balance)
+            <span class="text-sm text-gray-400 font-normal">of @money($voucher->value)</span>
           @else
-            £{{ number_format($voucher->value, 2) }}
+            @money($voucher->value)
           @endif
         </p>
       </div>
@@ -54,7 +54,7 @@
       </div>
       <div>
         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Min Spend</p>
-        <p class="font-semibold text-gray-800">{{ $voucher->min_spend ? '£'.number_format($voucher->min_spend, 2) : 'None' }}</p>
+        <p class="font-semibold text-gray-800">{{ $voucher->min_spend ? \App\Helpers\CurrencyHelper::format($voucher->min_spend, $currentSalon->currency ?? 'GBP') : 'None' }}</p>
       </div>
       @if($voucher->client)
       <div class="col-span-2">

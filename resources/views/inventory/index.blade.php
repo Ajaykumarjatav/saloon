@@ -51,7 +51,7 @@
                 <p class="text-xs text-muted">Min: {{ $item->low_stock_threshold }}</p>
             </td>
             <td class="hidden lg:table-cell font-semibold text-heading">
-                {{ $item->retail_price ? '£'.number_format($item->retail_price, 2) : '—' }}
+                {{ $item->retail_price ? \App\Helpers\CurrencyHelper::format($item->retail_price, $currentSalon->currency ?? 'GBP') : '—' }}
             </td>
             <td>
                 <div class="flex justify-end gap-2">

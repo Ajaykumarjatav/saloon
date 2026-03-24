@@ -54,7 +54,7 @@
                 <p class="font-medium text-body">{{ $apt->starts_at->format('H:i') }}</p>
                 <p class="text-xs text-muted">{{ $apt->starts_at->format('d M Y') }}</p>
             </td>
-            <td class="px-4 py-3.5 hidden lg:table-cell font-semibold text-heading">£{{ number_format($apt->total_price, 2) }}</td>
+            <td class="px-4 py-3.5 hidden lg:table-cell font-semibold text-heading">@money($apt->total_price)</td>
             <td class="px-4 py-3.5">
                 @php
                     $colors = [

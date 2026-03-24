@@ -7,12 +7,12 @@
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     <div class="stat-card">
         <p class="stat-label">Today's Revenue</p>
-        <p class="stat-value">£{{ number_format($todayRevenue, 2) }}</p>
+        <p class="stat-value">@money($todayRevenue)</p>
         <p class="stat-sub">{{ today()->format('d M Y') }}</p>
     </div>
     <div class="stat-card">
         <p class="stat-label">Month Revenue</p>
-        <p class="stat-value">£{{ number_format($monthRevenue, 2) }}</p>
+        <p class="stat-value">@money($monthRevenue)</p>
         <p class="text-xs mt-1 {{ $revenueChange >= 0 ? 'text-green-500' : 'text-red-500' }}">
             {{ $revenueChange >= 0 ? '▲' : '▼' }} {{ abs($revenueChange) }}% vs last month
         </p>
@@ -87,7 +87,7 @@
                 <div class="flex-1 flex flex-col items-center gap-1">
                     <div class="w-full rounded-t-md bg-velour-200 dark:bg-velour-800 hover:bg-velour-400 dark:hover:bg-velour-600 transition-colors"
                          style="height: {{ max(4, ($day['revenue'] / $maxRev) * 80) }}px"
-                         title="£{{ $day['revenue'] }}"></div>
+                         title="@money($day['revenue'])"></div>
                     <span class="text-xs text-muted">{{ $day['date'] }}</span>
                 </div>
                 @endforeach
@@ -109,7 +109,7 @@
                         </p>
                         <p class="text-xs text-muted">{{ $sale->created_at->diffForHumans() }}</p>
                     </div>
-                    <span class="text-sm font-bold text-heading">£{{ number_format($sale->total, 2) }}</span>
+                    <span class="text-sm font-bold text-heading">@money($sale->total)</span>
                 </div>
                 @empty
                 <p class="px-5 py-6 text-center text-sm text-muted">No sales yet today</p>

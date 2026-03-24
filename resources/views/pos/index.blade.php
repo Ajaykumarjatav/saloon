@@ -6,7 +6,7 @@
 <div class="grid grid-cols-2 gap-4 mb-6">
     <div class="stat-card">
         <p class="stat-label">Today's Revenue</p>
-        <p class="stat-value">£{{ number_format($todayRevenue, 2) }}</p>
+        <p class="stat-value">@money($todayRevenue)</p>
     </div>
     <div class="stat-card">
         <p class="stat-label">Today's Transactions</p>
@@ -48,7 +48,7 @@
             <td class="hidden md:table-cell">
                 <span class="badge-gray capitalize">{{ str_replace('_',' ',$txn->payment_method) }}</span>
             </td>
-            <td class="font-bold text-heading">£{{ number_format($txn->total, 2) }}</td>
+            <td class="font-bold text-heading">@money($txn->total)</td>
             <td>
                 @php $colors = ['completed'=>'badge-green','refunded'=>'badge-yellow','voided'=>'badge-red']; @endphp
                 <span class="{{ $colors[$txn->status] ?? 'badge-gray' }}">{{ ucfirst($txn->status) }}</span>

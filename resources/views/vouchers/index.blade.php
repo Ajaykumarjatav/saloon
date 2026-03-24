@@ -18,7 +18,7 @@
     <p class="text-xs text-gray-400 mt-1 uppercase tracking-wide">Gift Cards</p>
   </div>
   <div class="bg-white rounded-2xl border border-gray-200 p-5 text-center">
-    <p class="text-2xl font-bold text-gray-900">£{{ number_format($stats['total_value'], 2) }}</p>
+    <p class="text-2xl font-bold text-gray-900">@money($stats['total_value'])</p>
     <p class="text-xs text-gray-400 mt-1 uppercase tracking-wide">Remaining Value</p>
   </div>
 </div>
@@ -91,8 +91,8 @@
       <td class="px-4 py-3.5 text-xs text-gray-600">{{ $typeLabel }}</td>
       <td class="px-4 py-3.5 text-right font-semibold text-gray-900">
         @if($v->type === 'percentage') {{ $v->value }}%
-        @elseif($v->type === 'gift_card') £{{ number_format($v->remaining_balance, 2) }} <span class="text-xs text-gray-400">of £{{ number_format($v->value, 2) }}</span>
-        @else £{{ number_format($v->value, 2) }}
+        @elseif($v->type === 'gift_card') @money($v->remaining_balance) <span class="text-xs text-gray-400">of @money($v->value)</span>
+        @else @money($v->value)
         @endif
       </td>
       <td class="px-4 py-3.5 hidden md:table-cell text-xs {{ $isExpired ? 'text-red-500' : 'text-gray-500' }}">

@@ -22,7 +22,7 @@
 
     <div class="grid grid-cols-3 gap-4">
         <div class="stat-card text-center">
-            <p class="stat-value">£{{ number_format($totalRevenue, 2) }}</p>
+            <p class="stat-value">@money($totalRevenue)</p>
             <p class="stat-label mt-1">Revenue</p>
         </div>
         <div class="stat-card text-center">
@@ -50,7 +50,7 @@
                     {{ $apt->services->pluck('service.name')->filter()->join(', ') ?: '—' }}
                 </td>
                 <td class="text-muted">{{ $apt->starts_at->format('d M Y') }}</td>
-                <td class="font-semibold text-heading">£{{ number_format($apt->total_price, 2) }}</td>
+                <td class="font-semibold text-heading">@money($apt->total_price)</td>
             </tr>
             @empty
             <tr><td colspan="4" class="px-5 py-8 text-center text-sm text-muted">No appointments</td></tr>

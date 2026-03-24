@@ -17,6 +17,7 @@ use App\Policies\ClientPolicy;
 use App\Policies\InventoryPolicy;
 use App\Policies\MarketingCampaignPolicy;
 use App\Policies\PosTransactionPolicy;
+use App\Helpers\CurrencyHelper;
 use App\Policies\ReportPolicy;
 use App\Policies\ReviewPolicy;
 use App\Policies\SalonPolicy;
@@ -28,9 +29,11 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -52,6 +55,26 @@ class AppServiceProvider extends ServiceProvider
     {
         // ── Eloquent strict mode (catches N+1, lazy loads in dev) ──────────
         Model::shouldBeStrict(! app()->isProduction());
+
+        // ── Share current salon with all views (for currency/timezone) ─────
+        View::composer('*', function ($view) {
+            if (auth()->check()) {
+                try {
+                    $salon = auth()->user()->salons()->first();
+                    $view->with('currentSalon', $salon);
+                } catch (\Throwable) {}
+            }
+        });
+
+        // ── @money(amount) Blade directive — uses currentSalon currency ────
+        Blade::directive('money', function ($expression) {
+            return "<?php echo \\App\\Helpers\\CurrencyHelper::format((float)($expression), isset(\$currentSalon) && \$currentSalon ? \$currentSalon->currency ?? 'GBP' : 'GBP'); ?>";
+        });
+
+        // ── @currency Blade directive — outputs just the symbol ───────────
+        Blade::directive('currency', function ($expression) {
+            return "<?php echo \\App\\Helpers\\CurrencyHelper::symbol($expression ?? (isset(\$currentSalon) && \$currentSalon ? \$currentSalon->currency ?? 'GBP' : 'GBP')); ?>";
+        });
 
         // ── Force HTTPS ────────────────────────────────────────────────────
         if (app()->isProduction()) {

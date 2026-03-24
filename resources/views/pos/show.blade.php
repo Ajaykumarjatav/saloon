@@ -7,7 +7,7 @@
     <div class="card overflow-hidden">
         <div class="bg-velour-600 text-white px-6 py-5 text-center">
             <p class="text-xs font-semibold uppercase tracking-widest opacity-75 mb-1">Receipt</p>
-            <p class="text-2xl font-bold">£{{ number_format($transaction->total, 2) }}</p>
+            <p class="text-2xl font-bold">@money($transaction->total)</p>
             <p class="text-sm opacity-75 mt-1">{{ $transaction->created_at->format('d M Y, H:i') }}</p>
         </div>
 
@@ -46,7 +46,7 @@
                             @endif
                             @if($item->quantity > 1)<span class="text-muted"> × {{ $item->quantity }}</span>@endif
                         </span>
-                        <span class="font-semibold text-heading">£{{ number_format($item->subtotal, 2) }}</span>
+                        <span class="font-semibold text-heading">@money($item->subtotal)</span>
                     </div>
                     @endforeach
                 </div>
@@ -55,17 +55,17 @@
             <div class="border-t border-gray-100 dark:border-gray-800 pt-4 space-y-1.5 text-sm">
                 <div class="flex justify-between text-muted">
                     <span>Subtotal</span>
-                    <span>£{{ number_format($transaction->subtotal, 2) }}</span>
+                    <span>@money($transaction->subtotal)</span>
                 </div>
                 @if($transaction->discount_amount > 0)
                 <div class="flex justify-between text-green-600 dark:text-green-400">
                     <span>Discount</span>
-                    <span>−£{{ number_format($transaction->discount_amount, 2) }}</span>
+                    <span>−@money($transaction->discount_amount)</span>
                 </div>
                 @endif
                 <div class="flex justify-between font-bold text-heading text-base pt-1 border-t border-gray-100 dark:border-gray-800">
                     <span>Total</span>
-                    <span>£{{ number_format($transaction->total, 2) }}</span>
+                    <span>@money($transaction->total)</span>
                 </div>
             </div>
 

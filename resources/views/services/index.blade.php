@@ -26,7 +26,7 @@
                     @if($svc->description)<p class="text-xs text-muted mt-0.5 pl-6">{{ Str::limit($svc->description, 80) }}</p>@endif
                 </td>
                 <td class="text-muted">{{ $svc->duration_minutes }} min</td>
-                <td class="font-semibold text-heading">£{{ number_format($svc->price, 2) }}</td>
+                <td class="font-semibold text-heading">@money($svc->price)</td>
                 <td>
                     <span class="{{ $svc->is_active ? 'badge-green' : 'badge-gray' }}">
                         {{ $svc->is_active ? 'Active' : 'Inactive' }}
@@ -61,7 +61,7 @@
             <tr>
                 <td class="font-medium text-heading">{{ $svc->name }}</td>
                 <td class="text-muted">{{ $svc->duration_minutes }} min</td>
-                <td class="font-semibold text-heading">£{{ number_format($svc->price, 2) }}</td>
+                <td class="font-semibold text-heading">@money($svc->price)</td>
                 <td class="text-right">
                     <a href="{{ route('services.edit', $svc->id) }}" class="text-xs text-link font-medium">Edit</a>
                 </td>

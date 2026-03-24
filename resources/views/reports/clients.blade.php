@@ -17,25 +17,25 @@
 </div>
 
 <div class="table-wrap">
-    <h3 class="px-6 py-4 font-semibold text-gray-900 border-b border-gray-100">Top Spenders</h3>
+    <h3 class="px-6 py-4 font-semibold text-heading border-b border-gray-100 dark:border-gray-800">Top Spenders</h3>
     <table class="data-table">
         <thead>
-        <tr class="bg-gray-50 border-b border-gray-100">
-            <th class="text-left px-5 py-3 text-xs font-semibold text-muted uppercase">#</th>
-            <th class="text-left px-5 py-3 text-xs font-semibold text-muted uppercase">Client</th>
-            <th class="text-right px-5 py-3 text-xs font-semibold text-muted uppercase">Spent</th>
+        <tr>
+            <th class="text-left">#</th>
+            <th class="text-left">Client</th>
+            <th class="text-right">Spent</th>
         </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+        <tbody>
         @forelse($topClients as $i => $client)
-        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/40">
-            <td class="px-5 py-3 text-muted font-mono">{{ $i + 1 }}</td>
-            <td class="px-5 py-3">
+        <tr>
+            <td class="text-muted font-mono">{{ $i + 1 }}</td>
+            <td>
                 <a href="{{ route('clients.show', $client->id) }}" class="font-semibold text-velour-600 hover:underline">
                     {{ $client->first_name }} {{ $client->last_name }}
                 </a>
             </td>
-            <td class="px-5 py-3 text-right font-bold text-heading">Â£{{ number_format($client->total_spent, 2) }}</td>
+            <td class="text-right font-bold text-heading">@money($client->total_spent)</td>
         </tr>
         @empty
         <tr><td colspan="3" class="px-5 py-8 text-center text-sm text-muted">No data</td></tr>
@@ -45,4 +45,3 @@
 </div>
 
 @endsection
-

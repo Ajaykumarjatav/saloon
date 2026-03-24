@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full" x-data x-bind:class="$store.theme.dark ? 'dark' : ''">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') — Velour</title>
+    {{-- Apply theme BEFORE any CSS loads to prevent flash of wrong theme --}}
+    <script>
+        (function () {
+            var saved = localStorage.getItem('velour-theme');
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'dark' || (!saved && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -89,6 +101,9 @@
         }
         .form-error {
             @apply mt-1 text-xs text-red-600 dark:text-red-400;
+        }
+        .form-input-error {
+            @apply border-red-400 dark:border-red-500 focus:ring-red-500;
         }
 
         /* ── Buttons ── */
@@ -416,32 +431,61 @@
         <main class="flex-1 p-4 sm:p-6">
 
             @if(session('success'))
-            <div class="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm
+            <div data-flash class="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm
                         bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300">
                 <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
-                {{ session('success') }}
+                <span class="flex-1">{{ session('success') }}</span>
+                <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 flex-shrink-0">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            @endif
+
+            @if(session('warning'))
+            <div data-flash class="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm
+                        bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300">
+                <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                </svg>
+                <span class="flex-1">{{ session('warning') }}</span>
+                <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 flex-shrink-0">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
             @endif
 
             @if(session('error'))
-            <div class="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm
+            <div data-flash class="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm
                         bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300">
                 <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"/>
                 </svg>
-                {{ session('error') }}
+                <span class="flex-1">{{ session('error') }}</span>
+                <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100 flex-shrink-0">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
             @endif
 
             @if($errors->any())
-            <div class="mb-4 px-4 py-3 rounded-xl text-sm
+            <div data-flash class="mb-4 px-4 py-3 rounded-xl text-sm
                         bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300">
-                <p class="font-medium mb-1">Please fix the following:</p>
-                <ul class="list-disc list-inside space-y-0.5">
-                    @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-                </ul>
+                <div class="flex items-start gap-3">
+                    <svg class="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"/>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="font-medium mb-1">Please fix the following:</p>
+                        <ul class="list-disc list-inside space-y-0.5">
+                            @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+                        </ul>
+                    </div>
+                    <button onclick="this.closest('[data-flash]').remove()" class="opacity-60 hover:opacity-100 flex-shrink-0">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
             </div>
             @endif
 
@@ -452,13 +496,7 @@
 
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <script>
-    (function () {
-        const saved = localStorage.getItem('velour-theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (saved === 'dark' || (!saved && prefersDark)) {
-            document.documentElement.classList.add('dark');
-        }
-    })();
+    // Alpine theme store — syncs with the class already set by the inline IIFE above
     document.addEventListener('alpine:init', () => {
         Alpine.store('theme', {
             dark: document.documentElement.classList.contains('dark'),
@@ -474,7 +512,62 @@
             }
         });
     });
+
+    // Toast notification system
+    window.showToast = function(message, type) {
+        type = type || 'success';
+        var container = document.getElementById('toast-container');
+        if (!container) return;
+
+        var colors = {
+            success: 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700 text-green-800 dark:text-green-300',
+            error:   'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700 text-red-800 dark:text-red-300',
+            warning: 'bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-300',
+            info:    'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-300',
+        };
+        var icons = {
+            success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>',
+            error:   '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>',
+            warning: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>',
+            info:    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/>',
+        };
+
+        var toast = document.createElement('div');
+        toast.className = 'flex items-center gap-3 px-4 py-3 rounded-xl border text-sm shadow-lg pointer-events-auto transition-all duration-300 opacity-0 translate-y-2 ' + (colors[type] || colors.info);
+        toast.innerHTML = '<svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">' + (icons[type] || icons.info) + '</svg>'
+            + '<span class="flex-1">' + message + '</span>'
+            + '<button onclick="this.parentElement.remove()" class="ml-2 opacity-60 hover:opacity-100 flex-shrink-0">'
+            + '<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>'
+            + '</button>';
+
+        container.appendChild(toast);
+        // Animate in
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                toast.classList.remove('opacity-0', 'translate-y-2');
+            });
+        });
+        // Auto-dismiss after 5s
+        setTimeout(function() {
+            toast.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(function() { toast.remove(); }, 300);
+        }, 5000);
+    };
+
+    // Auto-dismiss inline flash messages after 6s
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-flash]').forEach(function(el) {
+            setTimeout(function() {
+                el.style.transition = 'opacity 0.3s';
+                el.style.opacity = '0';
+                setTimeout(function() { el.remove(); }, 300);
+            }, 6000);
+        });
+    });
 </script>
+
+{{-- Toast notification container --}}
+<div id="toast-container" class="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2 pointer-events-none w-80 max-w-[calc(100vw-2.5rem)]"></div>
 
 @include('partials.chatbot')
 @stack('scripts')

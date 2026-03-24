@@ -12,30 +12,40 @@
 
             <div>
                 <label class="form-label">Service name <span class="text-red-500">*</span></label>
-                <input type="text" name="name" value="{{ old('name', $service->name ?? '') }}" required class="form-input">
+                <input type="text" name="name" value="{{ old('name', $service->name ?? '') }}" required
+                       class="form-input @error('name') form-input-error @enderror">
+                @error('name')<p class="form-error">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="form-label">Category</label>
-                <select name="service_category_id" class="form-select">
+                <select name="service_category_id" class="form-select @error('service_category_id') form-input-error @enderror">
                     <option value="">No category</option>
                     @foreach($categories as $cat)
                     <option value="{{ $cat->id }}" {{ old('service_category_id', $service->service_category_id ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                     @endforeach
                 </select>
+                @error('service_category_id')<p class="form-error">{{ $message }}</p>@enderror
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="form-label">Duration (min) <span class="text-red-500">*</span></label>
-                    <input type="number" name="duration_minutes" min="5" max="480" value="{{ old('duration_minutes', $service->duration_minutes ?? 60) }}" required class="form-input">
+                    <input type="number" name="duration_minutes" min="5" max="480"
+                           value="{{ old('duration_minutes', $service->duration_minutes ?? 60) }}" required
+                           class="form-input @error('duration_minutes') form-input-error @enderror">
+                    @error('duration_minutes')<p class="form-error">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <label class="form-label">Price (£) <span class="text-red-500">*</span></label>
-                    <input type="number" name="price" min="0" step="0.01" value="{{ old('price', $service->price ?? '') }}" required class="form-input">
+                    <label class="form-label">Price ({{ \App\Helpers\CurrencyHelper::symbol($currentSalon->currency ?? 'GBP') }}) <span class="text-red-500">*</span></label>
+                    <input type="number" name="price" min="0" step="0.01"
+                           value="{{ old('price', $service->price ?? '') }}" required
+                           class="form-input @error('price') form-input-error @enderror">
+                    @error('price')<p class="form-error">{{ $message }}</p>@enderror
                 </div>
             </div>
             <div>
                 <label class="form-label">Description</label>
-                <textarea name="description" rows="3" class="form-textarea">{{ old('description', $service->description ?? '') }}</textarea>
+                <textarea name="description" rows="3" class="form-textarea @error('description') form-input-error @enderror">{{ old('description', $service->description ?? '') }}</textarea>
+                @error('description')<p class="form-error">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="form-label">Calendar colour</label>

@@ -28,19 +28,19 @@ class SettingsController extends Controller
         $salon = $this->salon();
 
         $data = $request->validate([
-            'name'        => ['required', 'string', 'max:150'],
-            'email'       => ['nullable', 'email', 'max:150'],
-            'phone'       => ['nullable', 'string', 'max:20'],
-            'website'     => ['nullable', 'url', 'max:200'],
-            'description' => ['nullable', 'string', 'max:1000'],
+            'name'          => ['required', 'string', 'max:150'],
+            'email'         => ['nullable', 'email', 'max:150'],
+            'phone'         => ['nullable', 'string', 'max:20'],
+            'website'       => ['nullable', 'url', 'max:200'],
+            'description'   => ['nullable', 'string', 'max:1000'],
             'address_line1' => ['nullable', 'string', 'max:200'],
             'address_line2' => ['nullable', 'string', 'max:200'],
             'city'          => ['nullable', 'string', 'max:100'],
             'county'        => ['nullable', 'string', 'max:100'],
             'postcode'      => ['nullable', 'string', 'max:20'],
             'country'       => ['nullable', 'string', 'max:2'],
-            'timezone'      => ['required', 'string', 'max:50'],
-            'currency'      => ['required', 'string', 'max:3'],
+            'timezone'      => ['required', 'string', 'timezone'],
+            'currency'      => ['required', 'string', 'size:3', 'in:' . implode(',', array_keys(\App\Helpers\CurrencyHelper::all()))],
         ]);
 
         $salon->update($data);

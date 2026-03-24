@@ -3,7 +3,9 @@
 @section('page-title', 'New Sale')
 @section('content')
 
-<div class="max-w-2xl" x-data="posForm()">
+@php $currencySymbol = \App\Helpers\CurrencyHelper::symbol($currentSalon->currency ?? 'GBP'); @endphp
+
+<div class="max-w-2xl" x-data="posForm('{{ $currencySymbol }}')">
     <div class="card p-6">
         <form action="{{ route('pos.store') }}" method="POST">
             @csrf
@@ -28,7 +30,7 @@
                     <label class="flex items-center gap-3 px-4 py-2.5 hover:bg-velour-50 dark:hover:bg-velour-900/20 cursor-pointer border-b border-gray-50 dark:border-gray-800 last:border-0">
                         <input type="checkbox" x-on:change="toggleItem($event, 'service', {{ $svc->id }}, {{ $svc->price }})" class="rounded border-gray-300 dark:border-gray-600 text-velour-600">
                         <span class="flex-1 text-sm text-body">{{ $svc->name }}</span>
-                        <span class="text-sm font-semibold text-heading">£{{ number_format($svc->price, 2) }}</span>
+                        <span class="text-sm font-semibold text-heading">@money($svc->price)</span>
                     </label>
                     @endforeach
                 </div>
@@ -43,7 +45,7 @@
                         <input type="checkbox" x-on:change="toggleItem($event, 'product', {{ $prod->id }}, {{ $prod->price }})" class="rounded border-gray-300 dark:border-gray-600 text-velour-600">
                         <span class="flex-1 text-sm text-body">{{ $prod->name }}</span>
                         <span class="text-xs text-muted mr-2">{{ $prod->quantity }} in stock</span>
-                        <span class="text-sm font-semibold text-heading">£{{ number_format($prod->price, 2) }}</span>
+                        <span class="text-sm font-semibold text-heading">@money($prod->price)</span>
                     </label>
                     @endforeach
                 </div>
@@ -64,12 +66,12 @@
                 <template x-for="item in selectedItems" :key="item.id+item.type">
                     <div class="flex justify-between text-sm">
                         <span x-text="item.label" class="text-body"></span>
-                        <span class="font-medium text-heading" x-text="'£' + (item.price * item.qty).toFixed(2)"></span>
+                        <span class="font-medium text-heading" x-text="currencySymbol + (item.price * item.qty).toFixed(2)"></span>
                     </div>
                 </template>
                 <div class="border-t border-gray-200 dark:border-gray-700 pt-2 flex justify-between font-bold text-heading">
                     <span>Total</span>
-                    <span x-text="'£' + total.toFixed(2)"></span>
+                    <span x-text="currencySymbol + total.toFixed(2)"></span>
                 </div>
             </div>
 
@@ -88,7 +90,7 @@
             </div>
 
             <div class="mb-5">
-                <label class="form-label">Discount (£) <span class="text-muted">(optional)</span></label>
+                <label class="form-label">Discount ({{ $currencySymbol }}) <span class="text-muted">(optional)</span></label>
                 <input type="number" name="discount_amount" min="0" step="0.01" placeholder="0.00" class="form-input w-full sm:w-40">
             </div>
 
@@ -107,8 +109,9 @@
 
 @push('scripts')
 <script>
-function posForm() {
+function posForm(currencySymbol) {
     return {
+        currencySymbol: currencySymbol,
         selectedItems: [],
         get total() { return this.selectedItems.reduce((s, i) => s + i.price * i.qty, 0); },
         toggleItem(event, type, id, price) {

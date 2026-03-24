@@ -26,7 +26,7 @@
             <p class="stat-label mt-1">Visits</p>
         </div>
         <div class="stat-card text-center">
-            <p class="stat-value">£{{ number_format($totalSpent, 2) }}</p>
+            <p class="stat-value">@money($totalSpent)</p>
             <p class="stat-label mt-1">Total Spent</p>
         </div>
         <div class="stat-card text-center">
@@ -70,7 +70,7 @@
                     {{ $apt->services->pluck('service.name')->filter()->join(', ') ?: '—' }}
                 </td>
                 <td class="text-body">{{ $apt->staff?->name ?? '—' }}</td>
-                <td class="font-semibold text-heading">£{{ number_format($apt->total_price, 2) }}</td>
+                <td class="font-semibold text-heading">@money($apt->total_price)</td>
                 <td>
                     @php $colors = ['confirmed'=>'badge-blue','completed'=>'badge-green','cancelled'=>'badge-red','no_show'=>'badge-yellow']; @endphp
                     <span class="{{ $colors[$apt->status] ?? 'badge-gray' }}">

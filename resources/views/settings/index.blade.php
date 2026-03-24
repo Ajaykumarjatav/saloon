@@ -42,16 +42,20 @@
                     <div>
                         <label class="form-label">Currency</label>
                         <select name="currency" class="form-select">
-                            @foreach(['GBP'=>'GBP (£)','USD'=>'USD ($)','EUR'=>'EUR (€)','AUD'=>'AUD (A$)','CAD'=>'CAD (C$)'] as $code => $lbl)
-                            <option value="{{ $code }}" {{ old('currency', $salon->currency) === $code ? 'selected' : '' }}>{{ $lbl }}</option>
+                            @foreach(\App\Helpers\CurrencyHelper::selectList() as $code => $lbl)
+                            <option value="{{ $code }}" {{ old('currency', $salon->currency ?? 'GBP') === $code ? 'selected' : '' }}>{{ $lbl }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
                         <label class="form-label">Timezone</label>
                         <select name="timezone" class="form-select">
-                            @foreach(['Europe/London','Europe/Paris','America/New_York','America/Chicago','America/Denver','America/Los_Angeles','Australia/Sydney'] as $tz)
-                            <option value="{{ $tz }}" {{ old('timezone', $salon->timezone) === $tz ? 'selected' : '' }}>{{ $tz }}</option>
+                            @foreach(\App\Helpers\TimezoneHelper::grouped() as $region => $zones)
+                            <optgroup label="{{ $region }}">
+                                @foreach($zones as $tz => $label)
+                                <option value="{{ $tz }}" {{ old('timezone', $salon->timezone ?? 'UTC') === $tz ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </optgroup>
                             @endforeach
                         </select>
                     </div>

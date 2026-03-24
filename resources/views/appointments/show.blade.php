@@ -40,7 +40,7 @@
             </div>
             <div>
                 <p class="stat-label mb-1">Total</p>
-                <p class="font-bold text-heading text-base">£{{ number_format($appointment->total_price, 2) }}</p>
+                <p class="font-bold text-heading text-base">@money($appointment->total_price)</p>
             </div>
             <div>
                 <p class="stat-label mb-1">Source</p>
@@ -58,7 +58,7 @@
                     <p class="font-medium text-heading">{{ $svc->service?->name }}</p>
                     <p class="text-xs text-muted">{{ $svc->duration_minutes }} min</p>
                 </div>
-                <p class="font-semibold text-heading">£{{ number_format($svc->price, 2) }}</p>
+                <p class="font-semibold text-heading">@money($svc->price)</p>
             </div>
             @endforeach
         </div>
