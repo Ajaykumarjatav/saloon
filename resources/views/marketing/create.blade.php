@@ -36,12 +36,12 @@
             </div>
             <div>
                 <label class="form-label">Message body <span class="text-red-500">*</span></label>
-                <textarea name="body" rows="8" required placeholder="Write your message here…&#10;&#10;You can use: {{first_name}}, {{salon_name}}, {{booking_link}}"
+                <textarea name="body" rows="8" required placeholder="Write your message here…&#10;&#10;You can use: @{{first_name}}, @{{salon_name}}, @{{booking_link}}"
                           class="form-textarea font-mono">{{ old('body') }}</textarea>
                 <p class="form-hint">Available variables:
-                    <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">{{first_name}}</code>
-                    <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">{{salon_name}}</code>
-                    <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">{{booking_link}}</code>
+                    <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@{{first_name}}</code>
+                    <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@{{salon_name}}</code>
+                    <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">@{{booking_link}}</code>
                 </p>
             </div>
             <div>

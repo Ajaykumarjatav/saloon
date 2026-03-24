@@ -108,13 +108,38 @@
             Reviews
         </a>
 
-        <a href="{{ route('reports.index') }}"
-           class="sidebar-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-            <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-            Reports
-        </a>
+        {{-- Reports sub-menu --}}
+        @php $reportsOpen = request()->routeIs('reports.*'); @endphp
+        <div x-data="{ open: {{ $reportsOpen ? 'true' : 'false' }} }">
+            <button @click="open = !open"
+                    class="sidebar-link w-full {{ $reportsOpen ? 'active' : '' }}">
+                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span class="flex-1 text-left">Reports</span>
+                <svg class="w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="ml-4 mt-0.5 space-y-0.5">
+                @foreach([
+                    ['revenue',      '💰', 'Revenue'],
+                    ['appointments', '📅', 'Appointments'],
+                    ['staff',        '👤', 'Staff'],
+                    ['clients',      '🧑', 'Clients'],
+                    ['services',     '✂️', 'Services'],
+                ] as [$key, $icon, $label])
+                <a href="{{ route('reports.show', $key) }}"
+                   class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors
+                          {{ request()->routeIs('reports.show') && request()->route('type') === $key
+                             ? 'bg-velour-50 dark:bg-velour-900/30 text-velour-700 dark:text-velour-300 font-medium'
+                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800' }}">
+                    <span class="text-base leading-none">{{ $icon }}</span>
+                    {{ $label }}
+                </a>
+                @endforeach
+            </div>
+        </div>
 
         {{-- ACCOUNT --}}
         <p class="px-3 pt-4 pb-1 text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest">Account</p>

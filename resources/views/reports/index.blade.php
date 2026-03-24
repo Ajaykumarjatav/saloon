@@ -10,8 +10,8 @@
         ['staff',        '👤', 'Staff',        'Performance, revenue and bookings per team member'],
         ['clients',      '🧑', 'Clients',      'New vs returning, top spenders'],
         ['services',     '✂️', 'Services',     'Most popular and highest earning services'],
-    ] as [$type, $icon, $title, $desc])
-    <a href="{{ route('reports.show', $type) }}"
+    ] as [$key, $icon, $title, $desc])
+    <a href="{{ route('reports.show', $key) }}"
        class="card p-6 hover:shadow-md hover:border-velour-400 dark:hover:border-velour-600 transition-all group">
         <div class="text-3xl mb-3">{{ $icon }}</div>
         <h3 class="font-semibold text-heading group-hover:text-velour-600 dark:group-hover:text-velour-400 transition-colors">{{ $title }}</h3>

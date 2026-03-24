@@ -14,7 +14,7 @@ class MarketingCampaign extends Model
 
     protected $fillable = [
         'salon_id', 'created_by', 'name', 'subject', 'type', 'status',
-        'content', 'template', 'offer_details', 'target', 'target_filters',
+        'body', 'segment', 'content', 'template', 'offer_details', 'target', 'target_filters',
         'recipient_count', 'sent_count', 'opened_count', 'clicked_count',
         'booking_count', 'revenue_generated', 'scheduled_at', 'sent_at',
     ];

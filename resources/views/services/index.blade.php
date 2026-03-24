@@ -3,7 +3,8 @@
 @section('page-title', 'Services')
 @section('content')
 
-<div class="flex justify-end mb-6">
+<div class="flex justify-end gap-3 mb-6">
+    <a href="{{ route('service-categories.index') }}" class="btn-outline">Manage Categories</a>
     <a href="{{ route('services.create') }}" class="btn-primary">+ Add Service</a>
 </div>
 

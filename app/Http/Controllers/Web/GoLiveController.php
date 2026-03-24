@@ -7,12 +7,14 @@ use App\Models\Appointment;
 use App\Models\LinkVisit;
 use App\Models\PosTransaction;
 use App\Models\Salon;
+use App\Models\SalonPhoto;
 use App\Models\Service;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * GoLiveController — Go Live & Share page (web)
@@ -38,9 +40,8 @@ class GoLiveController extends Controller
     public function index(Request $request)
     {
         $user  = Auth::user();
-        $salon = Salon::where('owner_id', $user->id)
-            ->with(['staff', 'services'])
-            ->firstOrFail();
+        $salon = $this->getSalon();
+        $salon->load(['staff', 'services']);
 
         $salonId    = $salon->id;
         $bookingUrl = rtrim(config('app.url'), '/') . '/book/' . $salon->slug;
@@ -81,6 +82,13 @@ class GoLiveController extends Controller
             ->orderByDesc('clicks')
             ->pluck('clicks', 'platform');
 
+        // ── Photos ───────────────────────────────────────────────────────────
+        $photos = SalonPhoto::where('salon_id', $salonId)
+            ->orderBy('sort_order')
+            ->get()
+            ->map(fn($p) => ['id' => $p->id, 'url' => asset('storage/' . $p->path)])
+            ->values();
+
         return view('dashboard.go-live', compact(
             'salon',
             'bookingUrl',
@@ -91,7 +99,52 @@ class GoLiveController extends Controller
             'onlineBookings',
             'embedCodes',
             'shareclicks',
+            'photos',
         ));
+    }
+
+    public function uploadPhoto(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $salon = $this->getSalon();
+
+        $request->validate([
+            'photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
+
+        $count = SalonPhoto::where('salon_id', $salon->id)->count();
+        if ($count >= 15) {
+            return response()->json(['error' => 'Maximum 15 photos allowed.'], 422);
+        }
+
+        $path = $request->file('photo')->store("salons/{$salon->id}/photos", 'public');
+
+        $photo = SalonPhoto::create([
+            'salon_id'   => $salon->id,
+            'path'       => $path,
+            'disk'       => 'public',
+            'sort_order' => $count,
+        ]);
+
+        return response()->json([
+            'id'  => $photo->id,
+            'url' => asset('storage/' . $path),
+        ]);
+    }
+
+    public function deletePhoto(Request $request, int $photoId): \Illuminate\Http\JsonResponse
+    {
+        $salon = $this->getSalon();
+        $photo = SalonPhoto::where('salon_id', $salon->id)->findOrFail($photoId);
+
+        Storage::disk($photo->disk)->delete($photo->path);
+        $photo->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    private function getSalon(): Salon
+    {
+        return Salon::where('owner_id', Auth::id())->firstOrFail();
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────

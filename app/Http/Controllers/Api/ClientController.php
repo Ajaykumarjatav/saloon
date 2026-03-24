@@ -57,7 +57,7 @@ class ClientController extends Controller
             'ltv'        => 'total_spent',
             'visits'     => 'visit_count',
             'last_visit' => 'last_visit_at',
-            default      => DB::raw('first_name || '' || last_name'), // safe: static string, no user input
+            default      => DB::raw("first_name || ' ' || last_name"), // safe: static string, no user input
         };
 
         $q->orderBy($sortColumn, $request->dir ?? 'asc');

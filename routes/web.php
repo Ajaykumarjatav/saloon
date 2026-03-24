@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\AppointmentController;
 use App\Http\Controllers\Web\ClientController;
 use App\Http\Controllers\Web\StaffController;
 use App\Http\Controllers\Web\ServiceController;
+use App\Http\Controllers\Web\ServiceCategoryController;
 use App\Http\Controllers\Billing\BillingController;
 use App\Http\Controllers\Web\CheckoutController;
 use App\Http\Controllers\Web\InventoryController;
@@ -111,6 +112,10 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
         Route::resource('clients', ClientController::class);
         Route::resource('staff', StaffController::class)->middleware('plan.limit:staff');
         Route::resource('services', ServiceController::class)->middleware('plan.limit:services');
+        Route::get('service-categories', [ServiceCategoryController::class, 'index'])->name('service-categories.index');
+        Route::post('service-categories', [ServiceCategoryController::class, 'store'])->name('service-categories.store');
+        Route::put('service-categories/{serviceCategory}', [ServiceCategoryController::class, 'update'])->name('service-categories.update');
+        Route::delete('service-categories/{serviceCategory}', [ServiceCategoryController::class, 'destroy'])->name('service-categories.destroy');
         Route::resource('inventory', InventoryController::class);
         Route::post('inventory/{item}/adjust', [InventoryController::class, 'adjust'])
              ->name('inventory.adjust');
@@ -147,6 +152,8 @@ Route::middleware(['auth', 'verified', '2fa'])->group(function () {
 
         // Go Live & Share
         Route::get('go-live', [\App\Http\Controllers\Web\GoLiveController::class, 'index'])->name('go-live');
+        Route::post('go-live/photos', [\App\Http\Controllers\Web\GoLiveController::class, 'uploadPhoto'])->name('go-live.photos.upload');
+        Route::delete('go-live/photos/{photo}', [\App\Http\Controllers\Web\GoLiveController::class, 'deletePhoto'])->name('go-live.photos.delete');
 
         Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
         Route::put('settings/salon',         [SettingsController::class, 'updateSalon'])->name('settings.salon');
@@ -305,6 +312,9 @@ Route::middleware(['auth', 'verified'])->prefix('onboarding')->name('onboarding.
     Route::get('/complete',            [\App\Http\Controllers\Web\OnboardingController::class, 'complete'])->name('complete');
     Route::get('/skip',                [\App\Http\Controllers\Web\OnboardingController::class, 'skip'])->name('skip');
 });
+
+// ── Public Booking Page ───────────────────────────────────────────────────────
+Route::get('book/{slug}', [\App\Http\Controllers\Web\BookingController::class, 'show'])->name('booking.show');
 
 // ── Legal & Compliance Pages ──────────────────────────────────────────────────
 Route::prefix('legal')->name('legal.')->group(function () {

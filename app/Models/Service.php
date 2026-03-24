@@ -11,7 +11,7 @@ class Service extends Model
     protected $fillable = [
         'salon_id','category_id','name','slug','description','duration_minutes',
         'buffer_minutes','price','price_from','price_on_consultation','deposit_type',
-        'deposit_value','online_bookable','show_in_menu','status','sort_order',
+        'deposit_value','online_bookable','online_booking','show_in_menu','status','sort_order','color',
     ];
     protected $casts = [
         'price'=>'decimal:2','price_from'=>'decimal:2','deposit_value'=>'decimal:2',

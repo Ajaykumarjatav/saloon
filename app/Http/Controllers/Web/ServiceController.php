@@ -54,9 +54,10 @@ class ServiceController extends Controller
             'color'           => ['nullable', 'string', 'max:7'],
         ]);
 
-        $data['salon_id'] = $salon->id;
-        $data['status']   = isset($data['is_active']) ? ($data['is_active'] ? 'active' : 'inactive') : 'active';
-        unset($data['is_active']);
+        $data['salon_id']       = $salon->id;
+        $data['status']         = isset($data['is_active']) ? ($data['is_active'] ? 'active' : 'inactive') : 'active';
+        $data['online_bookable'] = $data['online_booking'] ?? false;
+        unset($data['is_active'], $data['online_booking']);
         Service::create($data);
 
         return redirect()->route('services.index')->with('success', 'Service created successfully.');
@@ -89,6 +90,11 @@ class ServiceController extends Controller
         if (array_key_exists('is_active', $data)) {
             $data['status'] = $data['is_active'] ? 'active' : 'inactive';
             unset($data['is_active']);
+        }
+
+        if (array_key_exists('online_booking', $data)) {
+            $data['online_bookable'] = $data['online_booking'];
+            unset($data['online_booking']);
         }
 
         $service->update($data);

@@ -60,8 +60,11 @@ class MarketingController extends Controller
             'scheduled_at' => ['nullable', 'date', 'after:now'],
         ]);
 
-        $data['salon_id'] = $salon->id;
-        $data['status']   = $data['scheduled_at'] ? 'scheduled' : 'draft';
+        $data['salon_id']   = $salon->id;
+        $data['status']     = $data['scheduled_at'] ? 'scheduled' : 'draft';
+        $data['created_by'] = \App\Models\Staff::where('salon_id', $salon->id)
+            ->where('email', Auth::user()->email)
+            ->value('id');
 
         MarketingCampaign::create($data);
 
