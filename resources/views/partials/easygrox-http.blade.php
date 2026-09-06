@@ -10,4 +10,4 @@
         csrfTokenUrl: @json($easygroxCsrfTokenPath)
     };
 </script>
-<script src="{{ asset('js/easygrox-http.js') }}?v=1"></script>
+<script src="{{ asset('js/easygrox-http.js') }}?v=2"></script>

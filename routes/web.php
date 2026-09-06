@@ -128,10 +128,9 @@ Route::middleware([InitializeTenancyFromDomain::class, 'tenant', 'signed.flexibl
         ->name('pos.invoice.pdf.signed');
 });
 
-// ── Logout ────────────────────────────────────────────────────────────────────
+// ── Logout (GET+POST; no auth gate — expired sessions must still clear cleanly) ─
 
-Route::post('logout', [AuthController::class, 'logout'])
-    ->middleware('auth')
+Route::match(['get', 'post'], 'logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 // Fresh CSRF meta token for AJAX clients (session must already exist)

@@ -418,8 +418,32 @@ document.addEventListener('alpine:init', function () {
             finishLogout: function () {
                 this.open = false;
                 this.allowLogout = true;
-                if (this.pendingLogoutForm) {
-                    this.pendingLogoutForm.submit();
+                var form = this.pendingLogoutForm;
+                if (! form) return;
+
+                // Keep form _token in sync with the live session before submit.
+                var syncAndSubmit = function () {
+                    try {
+                        var token = (window.EasyGroxHttp && typeof window.EasyGroxHttp.metaToken === 'function')
+                            ? window.EasyGroxHttp.metaToken()
+                            : (document.querySelector('meta[name="csrf-token"]')?.content || '');
+                        if (!token && window.EasyGroxHttp && typeof window.EasyGroxHttp.xsrfToken === 'function') {
+                            token = window.EasyGroxHttp.xsrfToken();
+                        }
+                        if (token) {
+                            var input = form.querySelector('input[name="_token"]');
+                            if (input) input.value = token;
+                            var meta = document.querySelector('meta[name="csrf-token"]');
+                            if (meta) meta.setAttribute('content', token);
+                        }
+                    } catch (e) {}
+                    form.submit();
+                };
+
+                if (window.EasyGroxHttp && typeof window.EasyGroxHttp.refreshCsrf === 'function') {
+                    window.EasyGroxHttp.refreshCsrf().then(syncAndSubmit).catch(syncAndSubmit);
+                } else {
+                    syncAndSubmit();
                 }
             },
             submit: function () {

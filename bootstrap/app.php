@@ -76,6 +76,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Cashfree subscription checkout redirects back via POST (no CSRF token).
         // Public guest booking widget posts from /s/* (session path is the APP_URL subdirectory).
         // Storefront review share forms use array sessions (no durable CSRF cookie).
+        // Logout must never 419: stale tabs / expired CSRF should still clear the session.
         $middleware->validateCsrfTokens(except: [
             'billing/return',
             'api/v1/book/*/hold',
@@ -83,6 +84,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'api/v1/book/*/cancel/*',
             'api/v1/book/*/reschedule/*',
             's/*/reviews/share/*',
+            'logout',
+            '*/logout',
         ]);
 
         // Cashfree may append status fields when redirecting back to return_url.
@@ -181,6 +184,25 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (TokenMismatchException $e, Request $request) {
+            // Logout must always succeed even with a stale CSRF token / dead session.
+            if ($request->is('logout') || $request->is('*/logout') || $request->routeIs('logout')) {
+                try {
+                    if (\Illuminate\Support\Facades\Auth::check()) {
+                        \Illuminate\Support\Facades\Auth::logout();
+                    }
+                    if ($request->hasSession()) {
+                        $request->session()->invalidate();
+                        $request->session()->regenerateToken();
+                    }
+                } catch (\Throwable) {
+                    // still send the user to login
+                }
+
+                return redirect()
+                    ->route('login')
+                    ->with('success', 'You have been signed out.');
+            }
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'message' => 'Your session expired. Please refresh the page and try again.',

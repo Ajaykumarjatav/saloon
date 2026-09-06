@@ -247,15 +247,22 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $activity->recordLogout($user);
+            try {
+                $activity->recordLogout($user);
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
 
         Auth::logout();
         TrustedDevice::forget();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        return redirect()->route('login')->with('success', 'You have been signed out.');
     }
 
     // ── Email Verification ────────────────────────────────────────────────────
