@@ -499,38 +499,6 @@
         </div>
       </div>
 
-      {{-- ── EMBED WIDGET ──────────────────────────────────────────────── --}}
-      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-        <div class="px-6 py-4 max-sm:px-4 border-b border-gray-50 dark:border-gray-700 flex items-center gap-2">
-          <span class="text-lg">🖥</span>
-          <h2 class="font-semibold text-gray-800 dark:text-white">Embed on Your Website</h2>
-        </div>
-        <div class="p-6 max-sm:p-4 space-y-4 max-sm:min-w-0">
-          {{-- Tab switcher --}}
-          <div class="flex gap-1.5 bg-gray-100 dark:bg-gray-700 p-1 rounded-xl w-fit max-sm:w-full max-sm:overflow-x-auto">
-            <button @click="embedTab = 'iframe'" :class="embedTab === 'iframe' ? 'tab-btn on' : 'tab-btn off'" class="tab-btn max-sm:flex-1">iFrame</button>
-            <button @click="embedTab = 'js'"     :class="embedTab === 'js'    ? 'tab-btn on' : 'tab-btn off'" class="tab-btn max-sm:flex-1">JavaScript</button>
-            <button @click="embedTab = 'react'"  :class="embedTab === 'react' ? 'tab-btn on' : 'tab-btn off'" class="tab-btn max-sm:flex-1">React</button>
-          </div>
-
-          {{-- Code display --}}
-          <div class="relative group max-sm:min-w-0 max-sm:max-w-full">
-            <pre class="embed-code" x-show="embedTab === 'iframe'" x-text="embedCodes.iframe"></pre>
-            <pre class="embed-code" x-show="embedTab === 'js'"     x-text="embedCodes.js"    x-cloak></pre>
-            <pre class="embed-code" x-show="embedTab === 'react'"  x-text="embedCodes.react"  x-cloak></pre>
-            <button
-              @click="copyUrl(embedCodes[embedTab], 'embed'); !readOnly && trackClick('embed')"
-              class="absolute top-3 right-3 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white text-xs px-3 py-1.5 rounded-lg transition opacity-100 lg:opacity-0 lg:group-hover:opacity-100">
-              <span x-text="copied.embed ? '✅ Copied' : '📋 Copy'"></span>
-            </button>
-          </div>
-
-          <p class="text-xs text-gray-400 dark:text-gray-500">
-            Drop this snippet anywhere on your website. The widget automatically matches your salon's branding.
-          </p>
-        </div>
-      </div>
-
     </div>
 
     {{-- RIGHT COL (2/5) — QR + settings + analytics summary --}}
