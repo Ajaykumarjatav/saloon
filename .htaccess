@@ -1,6 +1,10 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # Super-admin is a Laravel route prefix (/admin/...). Do not fall through to the
+    # nested admin/ directory (a leftover app copy without vendor/).
+    RewriteRule ^admin(/.*)?$ public/index.php [L]
+
     # Redirect legacy /public/ URLs to clean paths (e.g. /vellor/admin/public/login → /vellor/admin/login)
     RewriteCond %{THE_REQUEST} \s/+(.*/)?public/([^\s?]*) [NC]
     RewriteRule ^ /%1%2 [R=301,L,NE]
