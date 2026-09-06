@@ -23,7 +23,7 @@
                    data-pattern-message="Use letters, numbers, spaces, and . , ' & - only."
                    class="auth-input @error('business_name') is-invalid @enderror">
             @error('business_name')<p class="auth-error">{{ $message }}</p>@enderror
-            <p class="auth-field-hint">Your booking page URL will use this name (must be unique).</p>
+            <p class="auth-field-hint">Your booking page URL is created from this name. If that URL is already used, a number is added (for example ajay-saloon1).</p>
         </div>
         <div class="auth-field auth-field--full">
             <label for="register-name" class="auth-label">Full name</label>

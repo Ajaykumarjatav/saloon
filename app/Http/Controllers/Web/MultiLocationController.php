@@ -132,7 +132,7 @@ class MultiLocationController extends Controller
             'notify_team_when_created' => ['nullable', 'boolean'],
         ]);
 
-        $slug = $this->uniqueSlugForOwner($owner->id, $data['name']);
+        $slug = \App\Support\SalonSlug::uniqueFromName($data['name']);
 
         $salon = Salon::create([
             'owner_id' => $owner->id,
@@ -239,18 +239,6 @@ class MultiLocationController extends Controller
     private function authorise(Salon $location): void
     {
         abort_unless($location->owner_id === Auth::id(), 403);
-    }
-
-    private function uniqueSlugForOwner(int $ownerId, string $name): string
-    {
-        $base = \Illuminate\Support\Str::slug($name) ?: 'branch';
-        $slug = $base;
-        $i = 2;
-        while (Salon::where('owner_id', $ownerId)->where('slug', $slug)->exists()) {
-            $slug = $base . '-' . $i;
-            $i++;
-        }
-        return $slug;
     }
 
     private function buildBranchReport(int $salonId): array

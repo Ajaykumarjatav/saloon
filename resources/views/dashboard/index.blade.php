@@ -23,7 +23,7 @@
 </div>
 @endif
 
-@if(empty($stylistDashboardScoped) && $salon && ! \App\Support\GoLiveDashboardHint::currentUserHasVisited($salon))
+@if(empty($stylistDashboardScoped) && $salon && !($adminStoreBrowse ?? false) && ! \App\Support\GoLiveDashboardHint::currentUserHasVisited($salon))
     @include('partials.booking-website-callout', ['salon' => $salon])
 @endif
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use App\Traits\BelongsToTenant;
+use App\Support\SalonUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -67,19 +68,9 @@ class ServiceCategory extends Model
         $user = auth()->user();
         abort_unless($user, 404);
 
-        if ($user->salons()->whereKey($category->salon_id)->exists()) {
-            return $category;
-        }
+        $salon = Salon::query()->withoutGlobalScopes()->find($category->salon_id);
+        abort_unless($salon && SalonUrl::userCanAccess($user, $salon), 404);
 
-        $viewerSalonId = Staff::withoutGlobalScopes()
-            ->where('user_id', $user->id)
-            ->whereNull('deleted_at')
-            ->value('salon_id');
-
-        if ($viewerSalonId && (int) $viewerSalonId === (int) $category->salon_id) {
-            return $category;
-        }
-
-        abort(404);
+        return $category;
     }
 }

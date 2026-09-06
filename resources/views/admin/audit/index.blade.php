@@ -25,43 +25,48 @@
 {{-- Filters --}}
 <form method="GET" action="{{ route('admin.audit.index') }}"
       class="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-5">
-  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-    <input type="text" name="search" value="{{ request('search') }}"
-           placeholder="Search events, email, IP…"
-           class="px-3 py-2 text-sm bg-gray-800 border border-gray-700 text-gray-200 rounded-xl
-                  placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-velour-500 col-span-full lg:col-span-1">
-
-    <select name="category" class="px-3 py-2 text-sm bg-gray-800 border border-gray-700 text-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-velour-500">
-      <option value="">All categories</option>
-      @foreach($categories as $cat)
-      <option value="{{ $cat }}" {{ request('category')===$cat?'selected':'' }}>{{ ucfirst($cat) }}</option>
-      @endforeach
-    </select>
-
-    <select name="severity" class="px-3 py-2 text-sm bg-gray-800 border border-gray-700 text-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-velour-500">
-      <option value="">All severities</option>
-      @foreach($severities as $sev)
-      <option value="{{ $sev }}" {{ request('severity')===$sev?'selected':'' }}>{{ ucfirst($sev) }}</option>
-      @endforeach
-    </select>
-
-    <div class="flex flex-col gap-1.5 w-full sm:w-auto sm:min-w-[14rem] sm:max-w-xs shrink-0 overflow-visible">
-      <label class="text-xs text-gray-400 mb-0">Date range</label>
+  <div class="flex flex-wrap items-end gap-3">
+    <div class="flex-1 min-w-[12rem]">
+      <label class="block text-xs text-gray-400 mb-1.5">Search</label>
+      <input type="text" name="search" value="{{ request('search') }}"
+             placeholder="Search events, email, IP…"
+             class="form-input placeholder-gray-500">
+    </div>
+    <div class="w-full sm:w-[11rem] shrink-0">
+      <label class="block text-xs text-gray-400 mb-1.5">Category</label>
+      <select name="category" class="form-select">
+        <option value="">All categories</option>
+        @foreach($categories as $cat)
+        <option value="{{ $cat }}" {{ request('category')===$cat?'selected':'' }}>{{ ucfirst($cat) }}</option>
+        @endforeach
+      </select>
+    </div>
+    <div class="w-full sm:w-[11rem] shrink-0">
+      <label class="block text-xs text-gray-400 mb-1.5">Severity</label>
+      <select name="severity" class="form-select">
+        <option value="">All severities</option>
+        @foreach($severities as $sev)
+        <option value="{{ $sev }}" {{ request('severity')===$sev?'selected':'' }}>{{ ucfirst($sev) }}</option>
+        @endforeach
+      </select>
+    </div>
+    <div class="w-full sm:w-[15rem] shrink-0">
+      <label class="block text-xs text-gray-400 mb-1.5">Date range</label>
       <x-date-range-picker
           :from-value="request('from')"
           :to-value="request('to')"
           class="w-full" />
     </div>
-  </div>
-  <div class="flex flex-wrap gap-2 mt-3 justify-end">
-    <a href="{{ route('admin.audit.index') }}" class="px-4 py-2 text-sm text-gray-400 hover:text-gray-200">Clear</a>
-    <button type="submit" class="px-4 py-2 text-sm font-semibold rounded-xl bg-velour-600 hover:bg-velour-700 text-white transition-colors">
-      Filter
-    </button>
-    <a href="{{ route('admin.audit.export', request()->query()) }}"
-       class="px-4 py-2 text-sm font-medium rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors">
-      Export CSV ↓
-    </a>
+    <div class="flex flex-wrap items-center gap-2 shrink-0">
+      <button type="submit" class="min-h-[2.5rem] px-4 text-sm font-semibold rounded-xl bg-velour-600 hover:bg-velour-700 text-white transition-colors">
+        Filter
+      </button>
+      <a href="{{ route('admin.audit.index') }}" class="min-h-[2.5rem] inline-flex items-center px-3 text-sm text-gray-400 hover:text-gray-200">Clear</a>
+      <a href="{{ route('admin.audit.export', request()->query()) }}"
+         class="min-h-[2.5rem] inline-flex items-center px-4 text-sm font-medium rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors">
+        Export CSV ↓
+      </a>
+    </div>
   </div>
 </form>
 

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Staff;
 use App\Models\User;
+use App\Support\AdminStoreBrowse;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class StaffPolicy
@@ -13,6 +14,10 @@ class StaffPolicy
     /** Owner may access any owned location; staff users may access their work salon. */
     private function userMayAccessStaffSalon(User $user, int $staffSalonId): bool
     {
+        if ($user->isSuperAdmin() && AdminStoreBrowse::isActive() && AdminStoreBrowse::salonId() === $staffSalonId) {
+            return true;
+        }
+
         if ($user->salons()->whereKey($staffSalonId)->exists()) {
             return true;
         }

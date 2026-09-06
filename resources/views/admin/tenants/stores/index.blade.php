@@ -48,7 +48,7 @@
         <div><dt class="text-gray-600">Staff</dt><dd class="text-gray-200 font-semibold">{{ $store->staff_count }}</dd></div>
         <div><dt class="text-gray-600">Clients</dt><dd class="text-gray-200 font-semibold">{{ number_format($store->clients_count) }}</dd></div>
         <div><dt class="text-gray-600">Appts</dt><dd class="text-gray-200 font-semibold">{{ number_format($store->appointments_count) }}</dd></div>
-        <div><dt class="text-gray-600">Revenue (mo)</dt><dd class="text-gray-200 font-semibold">£{{ number_format((float) ($revenueBySalon[$store->id] ?? 0), 0) }}</dd></div>
+        <div><dt class="text-gray-600">Revenue (mo)</dt><dd class="text-gray-200 font-semibold">{{ \App\Helpers\CurrencyHelper::format((float) ($revenueBySalon[$store->id] ?? 0), $store->currency ?? \App\Helpers\CurrencyHelper::defaultCode(), 0) }}</dd></div>
       </dl>
 
       <div class="mt-auto flex flex-wrap gap-2">

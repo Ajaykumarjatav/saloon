@@ -9,26 +9,30 @@
         <p class="text-sm text-gray-500 mt-1">App usage by every user — retained {{ $retentionDays }} days. Default: last 30 days.</p>
     </div>
 
-    <form method="GET" class="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex flex-wrap gap-3 items-end">
-        <div class="min-w-[12rem]">
-            <label class="text-xs text-gray-400">User</label>
-            <select name="user_id" class="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 text-gray-200 rounded-xl">
-                <option value="">All users</option>
-                @foreach($users as $u)
-                    <option value="{{ $u->id }}" @selected((string) request('user_id') === (string) $u->id)>{{ $u->name }} — {{ $u->email }}</option>
-                @endforeach
-            </select>
+    <form method="GET" class="bg-gray-900 border border-gray-800 rounded-2xl p-4">
+        <div class="flex flex-wrap items-end gap-3">
+            <div class="w-full sm:w-[13rem] shrink-0">
+                <label class="block text-xs text-gray-400 mb-1.5">User</label>
+                <select name="user_id" class="form-select">
+                    <option value="">All users</option>
+                    @foreach($users as $u)
+                        <option value="{{ $u->id }}" @selected((string) request('user_id') === (string) $u->id)>{{ $u->name }} — {{ $u->email }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex-1 min-w-[10rem]">
+                <label class="block text-xs text-gray-400 mb-1.5">Search</label>
+                <input type="search" name="q" value="{{ request('q') }}" class="form-input" placeholder="Label / email…">
+            </div>
+            <div class="w-full sm:w-[15rem] shrink-0">
+                <label class="block text-xs text-gray-400 mb-1.5">Date range</label>
+                <x-date-range-picker :from-value="$from" :to-value="$to" class="w-full" />
+            </div>
+            <div class="flex items-center gap-2 shrink-0 pb-px">
+                <button type="submit" class="min-h-[2.5rem] px-4 text-sm font-semibold rounded-xl bg-velour-600 hover:bg-velour-700 text-white">Filter</button>
+                <a href="{{ route('admin.user-activity.index') }}" class="min-h-[2.5rem] inline-flex items-center px-3 text-sm text-gray-400 hover:text-gray-200">Reset</a>
+            </div>
         </div>
-        <div class="flex-1 min-w-[10rem]">
-            <label class="text-xs text-gray-400">Search</label>
-            <input type="search" name="q" value="{{ request('q') }}" class="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 text-gray-200 rounded-xl" placeholder="Label / email…">
-        </div>
-        <div class="min-w-[14rem]">
-            <label class="text-xs text-gray-400">Date range</label>
-            <x-date-range-picker :from-value="$from" :to-value="$to" class="w-full" />
-        </div>
-        <button type="submit" class="px-4 py-2 text-sm font-semibold rounded-xl bg-velour-600 text-white">Filter</button>
-        <a href="{{ route('admin.user-activity.index') }}" class="px-4 py-2 text-sm text-gray-400">Reset</a>
     </form>
 
     @forelse($grouped as $date => $rows)

@@ -46,6 +46,34 @@
     .nav-icon { width: 1.25rem; height: 1.25rem; flex-shrink: 0; opacity: 0.9; }
     [x-cloak] { display: none !important; }
     .required-asterisk { color: #f87171; font-weight: 600; margin-left: 0.15rem; }
+    .text-heading { color: #f3f4f6; }
+    .form-select,
+    .form-input {
+      width: 100%;
+      min-height: 2.5rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      color: #e5e7eb;
+      background-color: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 0.75rem;
+    }
+    button.form-select {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      text-align: left;
+      cursor: pointer;
+      appearance: none;
+    }
+    .form-select:focus,
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #7c3aed;
+      border-color: transparent;
+    }
 
   .admin-shell-sidebar {
     width: 14rem;

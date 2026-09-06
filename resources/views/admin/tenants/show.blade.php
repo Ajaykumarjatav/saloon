@@ -111,7 +111,7 @@
         @forelse($recent['pos'] as $tx)
         <li>
           <a href="{{ route('admin.tenants.pos.show', [$salon->id, $tx->id]) }}" class="text-gray-300 hover:text-white">
-            {{ $tx->created_at?->format('j M') }} · £{{ number_format((float)$tx->total, 0) }}
+            {{ $tx->created_at?->format('j M') }} · {{ \App\Helpers\CurrencyHelper::format((float) $tx->total, $salon->currency ?? \App\Helpers\CurrencyHelper::defaultCode(), 0) }}
           </a>
         </li>
         @empty
@@ -214,7 +214,7 @@
           <div class="flex-1 h-4 bg-gray-800 rounded-full overflow-hidden">
             <div class="h-full bg-green-500/70 rounded-full" style="width: {{ round(($rev / $maxRev) * 100) }}%"></div>
           </div>
-          <span class="text-gray-300 w-16 text-right">£{{ number_format($rev, 0) }}</span>
+          <span class="text-gray-300 w-16 text-right">{{ \App\Helpers\CurrencyHelper::format((float) $rev, $salon->currency ?? \App\Helpers\CurrencyHelper::defaultCode(), 0) }}</span>
         </div>
         @endforeach
       </div>

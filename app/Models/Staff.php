@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Support\PublicStorage;
+use App\Support\SalonUrl;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -167,19 +168,10 @@ class Staff extends Model
         $user = auth()->user();
         abort_unless($user, 404);
 
-        if ($user->salons()->whereKey($staff->salon_id)->exists()) {
-            return $staff;
-        }
+        $salon = Salon::query()->withoutGlobalScopes()->find($staff->salon_id);
+        abort_unless($salon && SalonUrl::userCanAccess($user, $salon), 404);
 
-        $viewerSalonId = static::withoutGlobalScopes()
-            ->where('user_id', $user->id)
-            ->value('salon_id');
-
-        if ($viewerSalonId && (int) $viewerSalonId === (int) $staff->salon_id) {
-            return $staff;
-        }
-
-        abort(404);
+        return $staff;
     }
     public function services()     { return $this->belongsToMany(Service::class,'service_staff')->withPivot('price_override')->withTimestamps(); }
     public function appointments() { return $this->hasMany(Appointment::class); }

@@ -1,11 +1,11 @@
-{{-- Additive dashboard callout. Hidden after this user opens Go Live once. --}}
+{{-- Additive dashboard callout. Hidden after this user opens Go Live once. Not shown in super-admin browse. --}}
 @php
     $salon = $salon ?? null;
     $goLiveUrl = ($salon && Route::has('go-live'))
         ? route('go-live', ['store' => \App\Support\SalonUrl::key($salon)])
         : '';
 @endphp
-@if($salon && $goLiveUrl !== '')
+@if($salon && $goLiveUrl !== '' && !($adminStoreBrowse ?? \App\Support\AuthPanel::isAdminStoreBrowse()))
 <div
     class="relative overflow-hidden rounded-2xl border border-violet-300/80 dark:border-violet-500/40 bg-gradient-to-br from-violet-600 via-indigo-600 to-fuchsia-600 text-white shadow-lg mb-5"
     role="region"
