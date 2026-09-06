@@ -105,17 +105,31 @@
           @else bg-gray-800 text-gray-500 @endif"
           @if($account->signup_user_agent) title="{{ $account->signup_user_agent }}" @endif>{{ $device }}</span>
       </td>
-      <td class="px-4 py-3 text-right">
+      <td class="px-4 py-3 text-right overflow-visible">
         <div class="inline-flex items-center justify-end gap-3">
+          @if(! $account->welcome_whatsapp_sent_at)
+          <button type="button"
+                  class="js-welcome-wa-toggle inline-flex items-center justify-center w-8 h-8 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-gray-800/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50"
+                  data-url="{{ route('admin.tenants.owners.welcome-whatsapp', $account->id) }}"
+                  data-name="{{ $account->name }}"
+                  title="Welcome WhatsApp"
+                  aria-expanded="false"
+                  aria-haspopup="true">
+            <span class="sr-only">Welcome WhatsApp options</span>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </button>
+          @endif
           <a href="{{ route('admin.tenants.owners.logs', $account->id) }}"
-             class="inline-flex items-center justify-center text-gray-400 hover:text-velour-300"
+             class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-velour-300 hover:bg-gray-800/80"
              title="View all logs">
             <span class="sr-only">View all logs</span>
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
           </a>
-          <a href="{{ route('admin.tenants.stores', $account->id) }}" class="text-xs text-velour-400 hover:text-velour-300 font-medium">View stores →</a>
+          <a href="{{ route('admin.tenants.stores', $account->id) }}" class="text-xs text-velour-400 hover:text-velour-300 font-medium whitespace-nowrap">View stores →</a>
         </div>
       </td>
     </tr>
@@ -127,4 +141,159 @@
 </div>
 
 <div class="mt-4">{{ $accounts->links() }}</div>
+
+{{-- Fixed menu escapes table overflow so both options stay fully visible --}}
+<div id="welcome-wa-menu"
+     class="hidden fixed z-[10060] w-56 rounded-xl border border-gray-700 bg-gray-900 shadow-2xl py-1"
+     role="menu">
+  <button type="button"
+          id="welcome-wa-send"
+          class="w-full px-3 py-2.5 text-xs font-medium text-emerald-300 hover:bg-gray-800 text-left"
+          role="menuitem">
+    Send welcome message
+  </button>
+  <button type="button"
+          id="welcome-wa-mark"
+          class="w-full px-3 py-2.5 text-xs font-medium text-gray-300 hover:bg-gray-800 text-left border-t border-gray-800"
+          role="menuitem">
+    Already sent — mark &amp; hide
+  </button>
+</div>
+
+<script>
+(function () {
+  var flash = document.getElementById('admin-inline-flash');
+  var menu = document.getElementById('welcome-wa-menu');
+  var sendBtn = document.getElementById('welcome-wa-send');
+  var markBtn = document.getElementById('welcome-wa-mark');
+  var activeToggle = null;
+
+  function showMsg(text, kind) {
+    if (!flash) {
+      flash = document.createElement('div');
+      flash.id = 'admin-inline-flash';
+      var host = document.querySelector('main') || document.body;
+      host.prepend(flash);
+    }
+    flash.className = 'mb-4 px-4 py-3 rounded-xl text-sm border ' + (kind === 'error'
+      ? 'bg-red-900/30 text-red-300 border-red-800/50'
+      : 'bg-green-900/30 text-green-300 border-green-800/50');
+    flash.textContent = text;
+    flash.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function closeMenu() {
+    if (!menu) return;
+    menu.classList.add('hidden');
+    if (activeToggle) {
+      activeToggle.setAttribute('aria-expanded', 'false');
+      activeToggle = null;
+    }
+  }
+
+  function placeMenu(toggle) {
+    var rect = toggle.getBoundingClientRect();
+    var menuWidth = 224;
+    var menuHeight = 84;
+    var gap = 6;
+    var left = Math.min(Math.max(8, rect.right - menuWidth), window.innerWidth - menuWidth - 8);
+    var top = rect.bottom + gap;
+    if (top + menuHeight > window.innerHeight - 8) {
+      top = Math.max(8, rect.top - menuHeight - gap);
+    }
+    menu.style.left = left + 'px';
+    menu.style.top = top + 'px';
+  }
+
+  function openMenu(toggle) {
+    activeToggle = toggle;
+    toggle.setAttribute('aria-expanded', 'true');
+    placeMenu(toggle);
+    menu.classList.remove('hidden');
+  }
+
+  function requestWelcome(url, payload, toggle) {
+    var headers = window.EasyGroxHttp
+      ? window.EasyGroxHttp.csrfHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' })
+      : {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        };
+
+    sendBtn.disabled = true;
+    markBtn.disabled = true;
+    toggle.disabled = true;
+
+    fetch(url, {
+      method: 'POST',
+      headers: headers,
+      credentials: 'same-origin',
+      body: JSON.stringify(payload),
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        return { ok: res.ok, data: data };
+      });
+    }).then(function (result) {
+      var data = result.data || {};
+      var msg = data.message || (result.ok ? 'Done.' : 'Could not update WhatsApp status.');
+      showMsg(msg, result.ok ? 'ok' : 'error');
+      closeMenu();
+      sendBtn.disabled = false;
+      markBtn.disabled = false;
+      if (result.ok && data.hide_button) {
+        toggle.remove();
+      } else {
+        toggle.disabled = false;
+      }
+    }).catch(function () {
+      showMsg('Network error. Please try again.', 'error');
+      closeMenu();
+      sendBtn.disabled = false;
+      markBtn.disabled = false;
+      toggle.disabled = false;
+    });
+  }
+
+  document.querySelectorAll('.js-welcome-wa-toggle').forEach(function (toggle) {
+    toggle.addEventListener('click', function (event) {
+      event.stopPropagation();
+      if (activeToggle === toggle && !menu.classList.contains('hidden')) {
+        closeMenu();
+        return;
+      }
+      openMenu(toggle);
+    });
+  });
+
+  sendBtn.addEventListener('click', function (event) {
+    event.stopPropagation();
+    if (!activeToggle) return;
+    var toggle = activeToggle;
+    var url = toggle.getAttribute('data-url');
+    if (!url) return;
+    if (!confirm('Send welcome WhatsApp from +91 99501 05679?')) return;
+    requestWelcome(url, {}, toggle);
+  });
+
+  markBtn.addEventListener('click', function (event) {
+    event.stopPropagation();
+    if (!activeToggle) return;
+    var toggle = activeToggle;
+    var url = toggle.getAttribute('data-url');
+    if (!url) return;
+    if (!confirm('Mark as already sent? The WhatsApp button will be hidden.')) return;
+    requestWelcome(url, { already_sent: true }, toggle);
+  });
+
+  menu.addEventListener('click', function (event) { event.stopPropagation(); });
+  document.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') closeMenu();
+  });
+  window.addEventListener('resize', closeMenu);
+  window.addEventListener('scroll', closeMenu, true);
+})();
+</script>
 @endsection

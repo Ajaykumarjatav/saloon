@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Support\SupportContact;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -34,8 +35,8 @@ class StaffInviteCredentialsNotification extends Notification implements ShouldQ
             $mail->line('Temporary password: ' . $this->temporaryPassword);
         }
 
-        return $mail
+        return SupportContact::appendToMailMessage($mail
             ->line('After you sign in, you will be asked to choose a new password before using the app. Your dashboard and menus follow the role assigned by your salon.')
-            ->action('Open sign-in', route('login'));
+            ->action('Open sign-in', route('login')));
     }
 }

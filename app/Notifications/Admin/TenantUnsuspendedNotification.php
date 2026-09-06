@@ -1,6 +1,7 @@
 <?php
 namespace App\Notifications\Admin;
 use App\Models\Salon;
+use App\Support\SupportContact;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -20,8 +21,8 @@ class TenantUnsuspendedNotification extends Notification
             ->greeting("Good news, {$notifiable->name}!")
             ->line("Your EasyGrox account for **{$this->salon->name}** has been fully reinstated and is now active again.");
         if ($this->message) { $mail->line($this->message); }
-        return $mail
+        return SupportContact::appendToMailMessage($mail
             ->action('Go to Dashboard', route('dashboard', ['store' => \App\Support\SalonUrl::key($this->salon)]))
-            ->line("Thank you for your patience.");
+            ->line("Thank you for your patience."));
     }
 }

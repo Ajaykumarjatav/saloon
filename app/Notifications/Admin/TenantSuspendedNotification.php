@@ -1,6 +1,7 @@
 <?php
 namespace App\Notifications\Admin;
 use App\Models\Salon;
+use App\Support\SupportContact;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -24,9 +25,9 @@ class TenantSuspendedNotification extends Notification
         if ($this->customerMessage) {
             $mail->line($this->customerMessage);
         }
-        return $mail
+        return SupportContact::appendToMailMessage($mail
             ->line("If you believe this is an error or would like to discuss this, please contact our support team.")
             ->action('Contact Support', \App\Support\MailUrl::billingPlans($this->salon))
-            ->line("We're here to help resolve any issues as quickly as possible.");
+            ->line("We're here to help resolve any issues as quickly as possible."));
     }
 }

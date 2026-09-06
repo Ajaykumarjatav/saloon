@@ -24,6 +24,9 @@ use App\Http\Controllers\Api\ShareController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\GdprController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\Marketplace\MarketplaceAuthController;
+use App\Http\Controllers\Api\Marketplace\MarketplaceBookingController;
+use App\Http\Controllers\Api\Marketplace\MarketplaceStoreController;
 
 /*
 |──────────────────────────────────────────────────────────────────────────────
@@ -110,6 +113,27 @@ Route::prefix('v1')->middleware(['sanitize'])->group(function () {
          ->middleware('throttle:60,1');
     Route::post('track/social-click', [ShareController::class, 'trackPublicSocialClick'])
          ->middleware('throttle:60,1');
+
+    // EasyGrox customer marketplace (cross-tenant discovery + customer accounts)
+    Route::prefix('marketplace')->middleware(['throttle:60,1'])->group(function () {
+        Route::get('categories', [MarketplaceStoreController::class, 'categories']);
+        Route::get('stores', [MarketplaceStoreController::class, 'index']);
+        Route::get('stores/{slug}', [MarketplaceStoreController::class, 'show']);
+
+        Route::prefix('auth')->middleware(['throttle:10,1'])->group(function () {
+            Route::post('register', [MarketplaceAuthController::class, 'register']);
+            Route::post('login', [MarketplaceAuthController::class, 'login']);
+            Route::post('forgot', [MarketplaceAuthController::class, 'forgotPassword']);
+            Route::post('reset', [MarketplaceAuthController::class, 'resetPassword']);
+        });
+
+        Route::middleware(['marketplace.auth'])->group(function () {
+            Route::post('auth/logout', [MarketplaceAuthController::class, 'logout']);
+            Route::get('auth/me', [MarketplaceAuthController::class, 'me']);
+            Route::put('auth/me', [MarketplaceAuthController::class, 'update']);
+            Route::get('bookings', [MarketplaceBookingController::class, 'index']);
+        });
+    });
 
     // Stripe webhook — NO throttle (Stripe retries); verified by signature
     Route::post('webhooks/stripe', [PosController::class, 'stripeWebhook'])

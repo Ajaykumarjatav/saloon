@@ -1,6 +1,7 @@
 <?php
 namespace App\Notifications\Admin;
 use App\Models\SupportTicket;
+use App\Support\SupportContact;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -15,7 +16,7 @@ class SupportTicketReplyNotification extends Notification
     public function via($notifiable): array { return ['mail']; }
     public function toMail($notifiable): MailMessage
     {
-        return (new MailMessage)
+        return SupportContact::appendToMailMessage((new MailMessage)
             ->subject("[{$this->ticket->ticket_number}] Re: {$this->ticket->subject}")
             ->greeting("Hello {$notifiable->name},")
             ->line("The EasyGrox support team has replied to your ticket **{$this->ticket->ticket_number}**.")
@@ -23,6 +24,6 @@ class SupportTicketReplyNotification extends Notification
             ->line(substr(strip_tags($this->replyBody), 0, 500))
             ->line("---")
             ->action('View Ticket', \App\Support\SalonUrl::dashboardUrl($notifiable))
-            ->line("Reply to this email or log in to your account to continue the conversation.");
+            ->line("Reply to this email or log in to your account to continue the conversation."));
     }
 }

@@ -2,6 +2,7 @@
 namespace App\Notifications\Admin;
 use App\Models\Salon;
 use App\Models\TenantPlanOverride;
+use App\Support\SupportContact;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -20,12 +21,12 @@ class PlanOverrideNotification extends Notification
         $expiry   = $this->override->expires_at
             ? "until " . $this->override->expires_at->format('d M Y')
             : "with no expiry date";
-        return (new MailMessage)
+        return SupportContact::appendToMailMessage((new MailMessage)
             ->subject("Your EasyGrox plan has been updated")
             ->greeting("Hello {$notifiable->name}!")
             ->line("Great news — your account for **{$this->salon->name}** has been upgraded to the **{$planName}** plan {$expiry}.")
             ->line("You now have access to all features included in your new plan.")
             ->action('Explore your account', route('dashboard', ['store' => \App\Support\SalonUrl::key($this->salon)]))
-            ->line("If you have any questions, our support team is always happy to help.");
+            ->line("If you have any questions, our support team is always happy to help."));
     }
 }

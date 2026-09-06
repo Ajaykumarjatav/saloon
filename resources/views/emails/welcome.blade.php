@@ -63,7 +63,8 @@
     </p>
   </div>
   <div class="footer">
-    EasyGrox Salon SaaS &bull; <a href="mailto:support@easygrox.com" style="color:#555;">support@easygrox.com</a>
+    EasyGrox Salon SaaS &bull; <a href="mailto:support@easygrox.com" style="color:#555;">support@easygrox.com</a><br>
+    Need help? Call or WhatsApp <a href="{{ \App\Support\SupportContact::phoneTelHref() }}" style="color:#888;">{{ \App\Support\SupportContact::phoneDisplay() }}</a>
   </div>
 </div>
 </body>

@@ -40,7 +40,7 @@ class AdminTenantController extends Controller
         $query = User::query()
             ->whereHas('salons', fn ($q) => $q->withoutGlobalScopes())
             ->withCount(['salons as stores_count'])
-            ->with(['salons' => fn ($q) => $q->withoutGlobalScopes()->select('id', 'owner_id', 'name', 'is_active')]);
+            ->with(['salons' => fn ($q) => $q->withoutGlobalScopes()->select('id', 'owner_id', 'name', 'is_active', 'phone', 'whatsapp_number', 'whatsapp_same_as_phone')]);
 
         if ($search = $request->search) {
             $query->where(function ($q) use ($search) {

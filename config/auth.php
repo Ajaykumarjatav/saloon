@@ -9,10 +9,12 @@ return [
         'web'     => ['driver' => 'session', 'provider' => 'users'],
         'sanctum' => ['driver' => 'sanctum', 'provider' => 'users'],
         'client'  => ['driver' => 'sanctum', 'provider' => 'clients'],
+        'marketplace' => ['driver' => 'sanctum', 'provider' => 'marketplace_customers'],
     ],
     'providers' => [
         'users'   => ['driver' => 'eloquent', 'model' => App\Models\User::class],
         'clients' => ['driver' => 'eloquent', 'model' => App\Models\Client::class],
+        'marketplace_customers' => ['driver' => 'eloquent', 'model' => App\Models\MarketplaceCustomer::class],
     ],
     'passwords' => [
         'users'   => ['provider' => 'users', 'table' => 'password_reset_tokens', 'expire' => 60, 'throttle' => 60],

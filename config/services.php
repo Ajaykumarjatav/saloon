@@ -7,7 +7,7 @@ return [
         'sid'             => env('TWILIO_SID'),
         'token'           => env('TWILIO_TOKEN'),
         'from'            => env('TWILIO_FROM'),
-        'whatsapp_from'   => env('TWILIO_WHATSAPP_FROM'),
+        'whatsapp_from'   => env('TWILIO_WHATSAPP_FROM', 'whatsapp:+919950105679'),
     ],
     'pusher'   => ['app_id' => env('PUSHER_APP_ID'), 'app_key' => env('PUSHER_APP_KEY'), 'app_secret' => env('PUSHER_APP_SECRET'), 'app_cluster' => env('PUSHER_APP_CLUSTER')],
 ];

@@ -85,6 +85,9 @@ return [
         'name'    => env('MAIL_FROM_NAME', 'EasyGrox'),
     ],
 
+    // Shown on tenant-facing emails (auth, billing, support, welcome, etc.)
+    'support_phone'  => env('MAIL_SUPPORT_PHONE', '+91 99501 05679'),
+
     // Internal ops inbox for new user / new store / tenant feedback alerts (recipient, not sender)
     'ops_notify'     => env('MAIL_OPS_NOTIFY', 'ajayajatav439@gmail.com'),
     'support_notify' => env('MAIL_SUPPORT_NOTIFY', 'support@easygrox.com'),

@@ -22,11 +22,12 @@ class SendWhatsAppNotification implements ShouldQueue
         public readonly string $to,
         public readonly string $message,
         public readonly ?int $clientId = null,
+        public readonly ?string $from = null,
     ) {}
 
     public function handle(): void
     {
-        $from = config('services.twilio.whatsapp_from');
+        $from = $this->from ?: config('services.twilio.whatsapp_from');
         if (! config('services.twilio.sid') || ! config('services.twilio.token') || ! $from) {
             Log::warning("Twilio WhatsApp not configured — message skipped for {$this->to}");
 

@@ -37,6 +37,8 @@
     @yield('body')
   </div>
   <div class="footer">
+    <p>Need help? Call or WhatsApp <a href="{{ \App\Support\SupportContact::phoneTelHref() }}">{{ \App\Support\SupportContact::phoneDisplay() }}</a>
+      · <a href="{{ \App\Support\SupportContact::phoneWhatsAppHref() }}">Chat on WhatsApp</a></p>
     <p>© {{ date('Y') }} EasyGrox · Business Management Platform</p>
     <p>You received this email because you have an account at <a href="{{ rtrim(config('app.url'), '/') }}">{{ parse_url(config('app.url'), PHP_URL_HOST) ?: config('app.name') }}</a></p>
   </div>

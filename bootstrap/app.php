@@ -145,6 +145,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'client.auth'      => \App\Http\Middleware\AuthenticateClientToken::class,
             'client.portal'    => \App\Http\Middleware\EnsureClientPortalAuth::class,
             'client.salon'     => \App\Http\Middleware\ResolveClientSalon::class,
+            'marketplace.auth' => \App\Http\Middleware\AuthenticateMarketplaceToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

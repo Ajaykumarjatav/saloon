@@ -10,10 +10,13 @@ use App\Models\User;
 use App\Services\Admin\AdminTenantDataService;
 use App\Services\Admin\AdminPlanAssignmentService;
 use App\Services\Admin\TenantBlockService;
+use App\Services\TenantWelcomeWhatsAppService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
+use RuntimeException;
 
 class AdminTenantOwnerController extends Controller
 {
@@ -21,6 +24,7 @@ class AdminTenantOwnerController extends Controller
         private readonly AdminTenantDataService $data,
         private readonly TenantBlockService $blockService,
         private readonly AdminPlanAssignmentService $planAssignment,
+        private readonly TenantWelcomeWhatsAppService $welcomeWhatsApp,
     ) {}
 
     public function show(int $owner): View
@@ -210,5 +214,41 @@ class AdminTenantOwnerController extends Controller
             'account' => $account,
             'logs' => $logs,
         ]);
+    }
+
+    public function sendWelcomeWhatsApp(Request $request, int $owner): JsonResponse
+    {
+        $account = User::query()
+            ->whereHas('salons', fn ($q) => $q->withoutGlobalScopes())
+            ->findOrFail($owner);
+
+        $markOnly = $request->boolean('already_sent');
+
+        try {
+            $result = $this->welcomeWhatsApp->sendOrConfirm($account, $markOnly);
+        } catch (RuntimeException $e) {
+            return response()->json([
+                'ok' => false,
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'ok' => false,
+                'status' => 'error',
+                'message' => 'WhatsApp could not be sent. Check Twilio settings and try again.',
+            ], 502);
+        }
+
+        $already = $result['status'] === 'already_sent';
+
+        return response()->json([
+            'ok' => true,
+            'status' => $result['status'],
+            'message' => $result['message'],
+            'hide_button' => true,
+        ], $already && ! $markOnly ? 200 : 200);
     }
 }
