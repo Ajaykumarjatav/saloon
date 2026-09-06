@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Maps tenant salons into the EasyGrox marketplace app payload.
+ * Marketplace browse categories follow storefront website themes.
  * Does not mutate salon records or booking rules.
  */
 final class MarketplaceStorePresenter
@@ -20,26 +21,79 @@ final class MarketplaceStorePresenter
         '#1F2937', '#7C3AED', '#EC4899', '#059669', '#3B82F6', '#D97706', '#0F766E', '#B45309',
     ];
 
+    /** App-facing meta for the 7 website themes. */
     private const CATEGORY_META = [
-        'womens' => ['emoji' => '💇', 'accent' => '#F9E8FF', 'label' => "Women's"],
-        'mans' => ['emoji' => '💈', 'accent' => '#E8F0FF', 'label' => "Men's"],
-        'unisex' => ['emoji' => '✨', 'accent' => '#EEE9FF', 'label' => 'Unisex'],
-        'pet' => ['emoji' => '🐾', 'accent' => '#FFF4E5', 'label' => 'Pet'],
+        'glow-rose' => ['emoji' => '💇', 'accent' => '#FFEFEF', 'label' => 'Glow Rose'],
+        'beauty' => ['emoji' => '💄', 'accent' => '#FFE4F0', 'label' => 'Beauty'],
+        'nail' => ['emoji' => '💅', 'accent' => '#FFE8EF', 'label' => 'Nail'],
+        'tattoo' => ['emoji' => '🖊', 'accent' => '#E8EEF5', 'label' => 'Tattoo'],
+        'mackup' => ['emoji' => '✨', 'accent' => '#FFF4E5', 'label' => 'Mockup'],
+        'pet-grooming' => ['emoji' => '🐾', 'accent' => '#EEF2EB', 'label' => 'Pet Grooming'],
+        'spa' => ['emoji' => '💆', 'accent' => '#F5EFE8', 'label' => 'Spa'],
     ];
+
+    public static function marketplaceCategories(): array
+    {
+        $themes = StorefrontTheme::all();
+        $items = [];
+
+        foreach (array_keys(self::CATEGORY_META) as $slug) {
+            if (! isset($themes[$slug])) {
+                continue;
+            }
+
+            $meta = self::categoryMeta($slug);
+
+            $items[] = [
+                'id' => $slug,
+                'label' => $meta['label'],
+                'emoji' => $meta['emoji'],
+                'accent' => $meta['accent'],
+            ];
+        }
+
+        return $items;
+    }
 
     public static function categoryMeta(string $slug, ?string $name = null): array
     {
+        $slug = StorefrontTheme::normalizeSlug($slug);
         $meta = self::CATEGORY_META[$slug] ?? [
             'emoji' => '🏪',
             'accent' => '#F5F3FF',
-            'label' => $name ?: ucfirst(str_replace('-', ' ', $slug)),
+            'label' => $name ?: StorefrontTheme::label($slug),
         ];
 
-        if ($name) {
+        if ($name && ! isset(self::CATEGORY_META[$slug])) {
             $meta['label'] = $name;
         }
 
         return $meta;
+    }
+
+    public static function themeSlugForSalon(Salon $salon): string
+    {
+        return StorefrontTheme::forSalon($salon);
+    }
+
+    /** Raw salon_settings values that resolve to this theme slug. */
+    public static function themeSettingValues(string $themeSlug): array
+    {
+        $themeSlug = StorefrontTheme::normalizeSlug($themeSlug);
+        $values = [$themeSlug];
+
+        $themes = StorefrontTheme::all();
+        if (isset($themes[$themeSlug]['label'])) {
+            $values[] = (string) $themes[$themeSlug]['label'];
+        }
+
+        foreach (config('storefront-themes.legacy_labels', []) as $label => $slug) {
+            if ($slug === $themeSlug) {
+                $values[] = (string) $label;
+            }
+        }
+
+        return array_values(array_unique($values));
     }
 
     public static function distanceKm(?float $fromLat, ?float $fromLng, Salon $salon): ?float
@@ -63,9 +117,8 @@ final class MarketplaceStorePresenter
     public static function card(Salon $salon, Collection $services, ?float $fromLat = null, ?float $fromLng = null): array
     {
         $currency = $salon->currency ?: CurrencyHelper::defaultCode();
-        $category = $salon->businessType;
-        $categorySlug = $category?->slug ?? 'unisex';
-        $meta = self::categoryMeta($categorySlug, $category?->name);
+        $categorySlug = self::themeSlugForSalon($salon);
+        $meta = self::categoryMeta($categorySlug);
         $starting = $services->min(fn (Service $s) => (float) $s->price);
         $reviews = ($salon->relationLoaded('reviews') ? $salon->reviews : collect())
             ->filter(fn ($review) => ($review->is_public ?? true) !== false);

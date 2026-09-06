@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api\Marketplace;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessType;
 use App\Models\Salon;
 use App\Models\SalonResource;
 use App\Models\Staff;
 use App\Scopes\TenantScope;
 use App\Support\MarketplaceStorePresenter;
 use App\Support\PublicSalonAccess;
+use App\Support\StorefrontTheme;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,20 +17,9 @@ class MarketplaceStoreController extends Controller
 {
     public function categories(): JsonResponse
     {
-        $types = BusinessType::query()->orderBy('sort_order')->orderBy('name')->get();
-
-        $items = $types->map(function (BusinessType $type) {
-            $meta = MarketplaceStorePresenter::categoryMeta($type->slug, $type->name);
-
-            return [
-                'id' => $type->slug,
-                'label' => $type->name,
-                'emoji' => $meta['emoji'],
-                'accent' => $meta['accent'],
-            ];
-        })->values();
-
-        return response()->json(['categories' => $items]);
+        return response()->json([
+            'categories' => MarketplaceStorePresenter::marketplaceCategories(),
+        ]);
     }
 
     public function index(Request $request): JsonResponse
@@ -52,10 +41,26 @@ class MarketplaceStoreController extends Controller
             ->where('online_booking_enabled', true);
 
         if (! empty($validated['category'])) {
-            $slug = $validated['category'];
-            $query->where(function ($q) use ($slug) {
-                $q->whereHas('businessType', fn ($bt) => $bt->where('slug', $slug))
-                    ->orWhereHas('businessTypes', fn ($bt) => $bt->where('slug', $slug));
+            $themeSlug = StorefrontTheme::normalizeSlug($validated['category']);
+            $rawValues = MarketplaceStorePresenter::themeSettingValues($themeSlug);
+            $defaultTheme = StorefrontTheme::default();
+
+            $query->where(function ($q) use ($rawValues, $themeSlug, $defaultTheme) {
+                $q->whereHas('settings', function ($settings) use ($rawValues) {
+                    $settings->withoutGlobalScopes()
+                        ->where('key', 'website_theme')
+                        ->whereIn('value', $rawValues);
+                });
+
+                // Salons without a theme setting use the default website theme.
+                if ($themeSlug === $defaultTheme) {
+                    $q->orWhereDoesntHave('settings', function ($settings) {
+                        $settings->withoutGlobalScopes()
+                            ->where('key', 'website_theme')
+                            ->whereNotNull('value')
+                            ->where('value', '!=', '');
+                    });
+                }
             });
         }
 
