@@ -157,6 +157,8 @@ class AuthController extends Controller
             'password'      => ['required', 'confirmed', PasswordRule::min(8)->mixedCase()->numbers()],
         ], \App\Support\SalonSlug::uniqueNameMessages());
 
+        $signupDevice = \App\Support\SignupDevice::attributesFromRequest($request);
+
         $user = User::create([
             'name'          => $data['name'],
             'email'         => $data['email'],
@@ -164,6 +166,8 @@ class AuthController extends Controller
             'plan'          => config('billing.default_plan', 'trial'),
             'trial_ends_at' => now()->addDays((int) config('billing.trial_days', 15)),
             'is_active'     => true,
+            'signup_device' => $signupDevice['signup_device'],
+            'signup_user_agent' => $signupDevice['signup_user_agent'],
         ]);
 
         // Assign tenant_admin role to salon owners
@@ -205,6 +209,17 @@ class AuthController extends Controller
         }
 
         dispatch(new OnboardNewTenant($user, $salon));
+
+        app(\App\Services\AuditLogService::class)->write(
+            'auth',
+            'auth.register',
+            'info',
+            'Tenant registered from '.$signupDevice['signup_device'],
+            $user,
+            ['device' => $signupDevice['signup_device']],
+            $user->id,
+            $salon->id
+        );
 
         Auth::login($user);
         $request->session()->regenerate();

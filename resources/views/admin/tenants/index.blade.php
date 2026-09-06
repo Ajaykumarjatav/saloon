@@ -58,6 +58,7 @@
       <th class="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase hidden md:table-cell">Appts</th>
       <th class="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase">Status</th>
       <th class="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase hidden sm:table-cell">Joined</th>
+      <th class="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase hidden md:table-cell">Device</th>
       <th class="px-4 py-3"></th>
     </tr>
     </thead>
@@ -94,12 +95,32 @@
         @endif
       </td>
       <td class="px-4 py-3 hidden sm:table-cell text-xs text-gray-500">{{ $account->created_at->format('d M Y') }}</td>
+      <td class="px-4 py-3 hidden md:table-cell">
+        @php $device = $account->signup_device ?: 'Unknown'; @endphp
+        <span class="px-2 py-0.5 rounded-lg text-xs font-semibold
+          @if($device === 'Mobile') bg-sky-900/40 text-sky-300
+          @elseif($device === 'Tablet') bg-violet-900/40 text-violet-300
+          @elseif($device === 'App') bg-amber-900/40 text-amber-300
+          @elseif($device === 'Desktop') bg-gray-800 text-gray-300
+          @else bg-gray-800 text-gray-500 @endif"
+          @if($account->signup_user_agent) title="{{ $account->signup_user_agent }}" @endif>{{ $device }}</span>
+      </td>
       <td class="px-4 py-3 text-right">
-        <a href="{{ route('admin.tenants.stores', $account->id) }}" class="text-xs text-velour-400 hover:text-velour-300 font-medium">View stores →</a>
+        <div class="inline-flex items-center justify-end gap-3">
+          <a href="{{ route('admin.tenants.owners.logs', $account->id) }}"
+             class="inline-flex items-center justify-center text-gray-400 hover:text-velour-300"
+             title="View all logs">
+            <span class="sr-only">View all logs</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </a>
+          <a href="{{ route('admin.tenants.stores', $account->id) }}" class="text-xs text-velour-400 hover:text-velour-300 font-medium">View stores →</a>
+        </div>
       </td>
     </tr>
     @empty
-    <tr><td colspan="8" class="px-5 py-12 text-center text-sm text-gray-500">No tenant accounts found.</td></tr>
+    <tr><td colspan="9" class="px-5 py-12 text-center text-sm text-gray-500">No tenant accounts found.</td></tr>
     @endforelse
     </tbody>
   </table>

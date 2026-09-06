@@ -82,12 +82,16 @@ class AuthController extends Controller
             $staffRows[] = $row;
         }
 
+        $signupDevice = \App\Support\SignupDevice::attributesFromRequest($request);
+
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
             'plan'     => $data['plan'] ?? config('billing.default_plan', 'trial'),
             'trial_ends_at' => now()->addDays((int) config('billing.trial_days', 15)),
+            'signup_device' => $signupDevice['signup_device'],
+            'signup_user_agent' => $signupDevice['signup_user_agent'],
         ]);
 
         $slug = \App\Support\SalonSlug::uniqueFromName($data['salon_name']);
@@ -110,6 +114,17 @@ class AuthController extends Controller
         RegistrationStarterServices::seedSalon($salon, $data['starter_services'] ?? []);
 
         RegistrationStaff::seed($salon, $staffRows);
+
+        app(\App\Services\AuditLogService::class)->write(
+            'auth',
+            'auth.register',
+            'info',
+            'Tenant registered from '.$signupDevice['signup_device'],
+            $user,
+            ['device' => $signupDevice['signup_device']],
+            $user->id,
+            $salon->id
+        );
 
         $token = $user->createToken('velour-api', ['*'])->plainTextToken;
 

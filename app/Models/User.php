@@ -44,6 +44,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name', 'email', 'email_verified_at', 'password', 'force_password_change', 'avatar', 'phone', 'experience', 'language_proficiency', 'timezone', 'locale', 'plan', 'trial_ends_at',
         'scheduled_plan', 'scheduled_plan_interval', 'scheduled_plan_starts_at',
         'system_role', 'is_active', 'last_login_at',
+        'signup_device', 'signup_user_agent',
         'two_factor_secret', 'two_factor_recovery_codes',
         'two_factor_confirmed_at', 'two_factor_method',
         'two_factor_code', 'two_factor_expires_at',

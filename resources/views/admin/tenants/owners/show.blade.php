@@ -11,10 +11,19 @@
       <h2 class="text-xl font-bold text-white mt-1">{{ $account->name }}</h2>
       <p class="text-sm text-gray-500">{{ $account->email }}</p>
     </div>
-    <a href="{{ route('admin.tenants.stores', $account->id) }}"
-       class="px-4 py-2 text-sm font-semibold rounded-xl bg-velour-600 text-white hover:bg-velour-700">
-      View stores →
-    </a>
+    <div class="flex flex-wrap items-center gap-2">
+      <a href="{{ route('admin.tenants.owners.logs', $account->id) }}"
+         class="px-4 py-2 text-sm font-medium rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 inline-flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Logs
+      </a>
+      <a href="{{ route('admin.tenants.stores', $account->id) }}"
+         class="px-4 py-2 text-sm font-semibold rounded-xl bg-velour-600 text-white hover:bg-velour-700">
+        View stores →
+      </a>
+    </div>
   </div>
 
   {{-- Block / Unblock account --}}

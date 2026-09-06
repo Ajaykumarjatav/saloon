@@ -12,6 +12,7 @@ use App\Services\Admin\AdminPlanAssignmentService;
 use App\Services\Admin\TenantBlockService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class AdminTenantOwnerController extends Controller
@@ -150,5 +151,64 @@ class AdminTenantOwnerController extends Controller
         );
 
         return back()->with('success', Plan::labelFor($request->plan).' assigned to '.$account->name.'.');
+    }
+
+    public function logs(int $owner): View
+    {
+        $account = User::query()
+            ->with(['salons' => fn ($q) => $q->withoutGlobalScopes()->select('id', 'owner_id', 'name')])
+            ->whereHas('salons', fn ($q) => $q->withoutGlobalScopes())
+            ->findOrFail($owner);
+
+        $salonIds = $account->salons->pluck('id')->map(fn ($id) => (int) $id)->filter()->values();
+
+        if (! Schema::hasTable('user_activity_logs') && ! Schema::hasTable('audit_logs')) {
+            $logs = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 75);
+            $logs->setPath(request()->url());
+
+            return view('admin.tenants.owners.logs', [
+                'account' => $account,
+                'logs' => $logs,
+            ]);
+        }
+
+        $parts = [];
+
+        if (Schema::hasTable('user_activity_logs')) {
+            $parts[] = DB::table('user_activity_logs')
+                ->selectRaw("occurred_at, 'activity' as source, label as summary, user_name, user_email, ip_address, COALESCE(method, action) as kind")
+                ->where(function ($q) use ($account, $salonIds) {
+                    $q->where('user_id', $account->id);
+                    if ($salonIds->isNotEmpty()) {
+                        $q->orWhereIn('salon_id', $salonIds->all());
+                    }
+                });
+        }
+
+        if (Schema::hasTable('audit_logs')) {
+            $parts[] = DB::table('audit_logs')
+                ->selectRaw("occurred_at, 'audit' as source, COALESCE(NULLIF(description, ''), event) as summary, user_name, user_email, ip_address, event as kind")
+                ->where(function ($q) use ($account, $salonIds) {
+                    $q->where('user_id', $account->id);
+                    if ($salonIds->isNotEmpty()) {
+                        $q->orWhereIn('salon_id', $salonIds->all());
+                    }
+                });
+        }
+
+        $union = array_shift($parts);
+        foreach ($parts as $part) {
+            $union = $union->unionAll($part);
+        }
+
+        $logs = DB::query()
+            ->fromSub($union, 'tenant_logs')
+            ->orderByDesc('occurred_at')
+            ->paginate(75);
+
+        return view('admin.tenants.owners.logs', [
+            'account' => $account,
+            'logs' => $logs,
+        ]);
     }
 }
