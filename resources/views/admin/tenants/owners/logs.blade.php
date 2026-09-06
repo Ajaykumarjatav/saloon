@@ -8,7 +8,7 @@
         <div>
             <a href="{{ route('admin.tenants') }}" class="text-xs text-gray-500 hover:text-gray-300">← All tenants</a>
             <h1 class="text-xl font-bold text-gray-100 mt-1">{{ $account->name }}</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ $account->email }} · every stored activity and audit event from signup to now</p>
+            <p class="text-sm text-gray-500 mt-1">{{ $account->email }} · every stored activity and audit event from signup to now · times in {{ \App\Support\SalonTime::defaultTimezone() }}</p>
         </div>
         <a href="{{ route('admin.tenants.owners.show', $account->id) }}"
            class="px-4 py-2 text-sm font-medium rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800">Account</a>
@@ -20,7 +20,7 @@
             if (! $at) {
                 return 'unknown';
             }
-            return \Carbon\Carbon::parse($at)->toDateString();
+            return \App\Support\SalonTime::toDisplay($at)->toDateString();
         });
     @endphp
 
@@ -33,7 +33,7 @@
             <ul class="divide-y divide-gray-800/80">
                 @foreach($rows as $row)
                 <li class="px-4 py-3 text-sm flex gap-3">
-                    <span class="w-12 shrink-0 font-mono text-xs text-gray-500">{{ $row->occurred_at ? \Carbon\Carbon::parse($row->occurred_at)->format('H:i') : '—' }}</span>
+                    <span class="w-12 shrink-0 font-mono text-xs text-gray-500">{{ $row->occurred_at ? \App\Support\SalonTime::toDisplay($row->occurred_at)->format('H:i') : '—' }}</span>
                     <div class="min-w-0 flex-1">
                         <p class="text-gray-200">{{ $row->summary ?: $row->kind }}</p>
                         <p class="text-xs text-gray-500">

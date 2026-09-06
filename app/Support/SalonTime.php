@@ -180,4 +180,10 @@ final class SalonTime
             return self::timezone($salon);
         }
     }
+
+    /** Convert a UTC stored timestamp to the platform display timezone (IST by default). */
+    public static function toDisplay(mixed $at): Carbon
+    {
+        return Carbon::parse($at)->timezone(self::defaultTimezone());
+    }
 }

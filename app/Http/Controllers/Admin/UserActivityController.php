@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserActivityLog;
 use App\Services\UserActivityLogger;
+use App\Support\SalonTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -43,7 +44,7 @@ class UserActivityController extends Controller
         }
 
         $logs = $query->paginate(50)->withQueryString();
-        $grouped = $logs->getCollection()->groupBy(fn (UserActivityLog $r) => $r->occurred_at->toDateString());
+        $grouped = $logs->getCollection()->groupBy(fn (UserActivityLog $r) => SalonTime::toDisplay($r->occurred_at)->toDateString());
         $users = User::query()->orderBy('name')->limit(500)->get(['id', 'name', 'email']);
 
         return view('admin.user-activity.index', [

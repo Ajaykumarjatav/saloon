@@ -6,7 +6,7 @@
 <div class="space-y-5 max-w-5xl">
     <div>
         <h1 class="text-xl font-bold text-gray-100">User activity</h1>
-        <p class="text-sm text-gray-500 mt-1">App usage by every user — retained {{ $retentionDays }} days. Default: last 30 days.</p>
+        <p class="text-sm text-gray-500 mt-1">App usage by every user — retained {{ $retentionDays }} days. Default: last 30 days. Times in {{ \App\Support\SalonTime::defaultTimezone() }}.</p>
     </div>
 
     <form method="GET" class="bg-gray-900 border border-gray-800 rounded-2xl p-4">
@@ -44,7 +44,7 @@
             <ul class="divide-y divide-gray-800/80">
                 @foreach($rows as $row)
                 <li class="px-4 py-3 text-sm flex gap-3">
-                    <span class="w-12 font-mono text-xs text-gray-500">{{ $row->occurred_at->format('H:i') }}</span>
+                    <span class="w-12 font-mono text-xs text-gray-500">{{ \App\Support\SalonTime::toDisplay($row->occurred_at)->format('H:i') }}</span>
                     <div class="min-w-0">
                         <p class="text-gray-200">{{ $row->label }}</p>
                         <p class="text-xs text-gray-500">{{ $row->user_name }} · {{ $row->user_email }}
