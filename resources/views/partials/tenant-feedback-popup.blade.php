@@ -1,4 +1,4 @@
-{{-- Tenant project feedback popup: once/day until the salon has submitted. --}}
+{{-- Tenant project feedback: once per day, only on logout, until the salon has submitted. --}}
 @php
     $showTenantFeedbackPrompt = auth()->check()
         && ! \App\Support\AuthPanel::isAdminStoreBrowse()
@@ -168,9 +168,9 @@
     x-cloak
     x-show="open"
     x-transition.opacity.duration.200ms
-    @keydown.escape.window="open && dismissForToday()"
+    @keydown.escape.window="open && skipAndLogout()"
 >
-    <div class="absolute inset-0" @click="dismissForToday()"></div>
+    <div class="absolute inset-0" @click="skipAndLogout()"></div>
     <div
         class="tfb-card relative bg-white border border-gray-200/90 dark:border-gray-700"
         @click.stop
@@ -195,7 +195,7 @@
             <button
                 type="button"
                 class="p-1 rounded-md text-gray-400/80 hover:text-gray-600 dark:hover:text-gray-300 transition-colors flex-shrink-0 -mt-0.5"
-                @click="dismissForToday()"
+                @click="skipAndLogout()"
                 aria-label="Close"
             >
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -280,7 +280,7 @@
                 <button
                     type="button"
                     class="px-2 py-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-                    @click="dismissForToday()"
+                    @click="skipAndLogout()"
                     :disabled="submitting"
                 >
                     Not now
@@ -303,6 +303,9 @@ document.addEventListener('alpine:init', function () {
     Alpine.data('tenantFeedbackPopup', function (cfg) {
         return {
             open: false,
+            eligible: false,
+            allowLogout: false,
+            pendingLogoutForm: null,
             rating: 0,
             hoverRating: 0,
             message: '',
@@ -335,12 +338,15 @@ document.addEventListener('alpine:init', function () {
                 else this.selectedTopics.splice(i, 1);
             },
             storageKey: function () {
-                var day = new Date().toISOString().slice(0, 10);
+                var now = new Date();
+                var day = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
                 return 'egx-tenant-feedback:' + (this.salonId || '0') + ':' + (this.userId || '0') + ':' + day;
             },
-            init: function () {
+            statusPromise: null,
+            loadStatus: function () {
                 var self = this;
-                fetch(cfg.statusUrl, {
+                if (this.statusPromise) return this.statusPromise;
+                this.statusPromise = fetch(cfg.statusUrl, {
                     headers: window.EasyGroxHttp
                         ? window.EasyGroxHttp.csrfHeaders({ Accept: 'application/json' })
                         : {
@@ -353,20 +359,68 @@ document.addEventListener('alpine:init', function () {
                     if (!res.ok) return null;
                     return res.json();
                 }).then(function (data) {
-                    if (!data || !data.eligible) return;
-                    self.salonId = data.salon_id;
-                    self.userId = data.user_id;
-                    try {
-                        if (localStorage.getItem(self.storageKey()) === '1') return;
-                    } catch (e) {}
-                    setTimeout(function () { self.open = true; }, 1800);
-                }).catch(function () {});
+                    if (data && data.eligible) {
+                        self.salonId = data.salon_id;
+                        self.userId = data.user_id;
+                        self.eligible = true;
+                    } else {
+                        self.eligible = false;
+                    }
+                    return data;
+                }).catch(function () {
+                    self.eligible = false;
+                    self.statusPromise = null;
+                    return null;
+                });
+                return this.statusPromise;
             },
-            dismissForToday: function () {
+            init: function () {
+                this.bindLogoutForms();
+                this.loadStatus();
+            },
+            bindLogoutForms: function () {
+                var self = this;
+                document.querySelectorAll('form.js-tenant-logout-form').forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        self.onLogoutSubmit(event);
+                    });
+                });
+            },
+            alreadyPromptedToday: function () {
+                try {
+                    return localStorage.getItem(this.storageKey()) === '1';
+                } catch (e) {
+                    return false;
+                }
+            },
+            markPromptedToday: function () {
                 try {
                     if (this.salonId) localStorage.setItem(this.storageKey(), '1');
                 } catch (e) {}
+            },
+            onLogoutSubmit: function (event) {
+                if (this.allowLogout) return;
+                event.preventDefault();
+                this.pendingLogoutForm = event.target;
+                var self = this;
+                this.loadStatus().then(function () {
+                    if (!self.eligible || self.alreadyPromptedToday()) {
+                        self.finishLogout();
+                        return;
+                    }
+                    self.open = true;
+                });
+            },
+            skipAndLogout: function () {
+                this.markPromptedToday();
+                this.finishLogout();
+            },
+            finishLogout: function () {
                 this.open = false;
+                this.allowLogout = true;
+                if (this.pendingLogoutForm) {
+                    this.pendingLogoutForm.submit();
+                }
             },
             submit: function () {
                 var self = this;
@@ -414,11 +468,11 @@ document.addEventListener('alpine:init', function () {
                         self.submitting = false;
                         return;
                     }
-                    try { localStorage.setItem(self.storageKey(), '1'); } catch (e) {}
-                    self.open = false;
+                    self.markPromptedToday();
                     if (typeof window.showToast === 'function') {
                         window.showToast(result.data.message || 'Thank you for your feedback!', 'success');
                     }
+                    self.finishLogout();
                 }).catch(function () {
                     self.error = 'Network error. Please try again.';
                     self.submitting = false;
