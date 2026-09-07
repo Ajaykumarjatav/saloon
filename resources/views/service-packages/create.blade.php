@@ -36,9 +36,7 @@
                 <textarea name="description" rows="3" class="form-textarea @error('description') form-input-error @enderror" placeholder="What clients get in this bundle…">{{ old('description') }}</textarea>
                 @error('description')<p class="form-error">{{ $message }}</p>@enderror
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                @include('service-packages.partials.package-price-field', ['priceValue' => old('price')])
-            </div>
+            @include('service-packages.partials.package-price-field', ['priceValue' => old('price')])
             <div>
                 <label class="form-label">Allowed staff roles</label>
                 <p class="form-hint mb-2">Optional. If none are selected, any role may be assigned when this package is used in booking.</p>

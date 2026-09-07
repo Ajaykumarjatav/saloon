@@ -56,9 +56,9 @@
         <div class="flex flex-col rounded-xl border-2 border-dashed border-velour-400/60 dark:border-velour-600/50 bg-velour-50/40 dark:bg-velour-950/20 min-h-0">
             <div class="px-3 py-2 border-b border-velour-200/80 dark:border-velour-800 flex items-center justify-between gap-2">
                 <span class="text-xs font-semibold uppercase tracking-wide text-velour-800 dark:text-velour-200">In this package</span>
-                <span class="text-xs font-bold"
+                <span class="text-xs font-bold tabular-nums"
                       :class="selectedIds.length >= 2 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'"
-                      x-text="selectedIds.length + ' / min 2'"></span>
+                      x-text="selectedIds.length + ' / min 2' + (selectedIds.length ? ' · ' + selectedTotalLabel() : '')"></span>
             </div>
             <div class="flex-1 overflow-y-auto max-h-72 p-2 space-y-1">
                 <p x-show="selectedIds.length === 0" x-cloak class="text-sm text-muted px-2 py-6 text-center">Nothing added yet. Choose services from the left and click <strong>Add</strong>.</p>
@@ -119,6 +119,15 @@ function packageServicePicker(catalog, initialIds) {
                 const s = byId[id];
                 return sum + (s ? Number(s.price) || 0 : 0);
             }, 0);
+        },
+        selectedTotalLabel() {
+            const first = this.selectedIds.length ? byId[this.selectedIds[0]] : null;
+            const sample = first && first.priceLabel ? String(first.priceLabel) : '';
+            const symbolMatch = sample.match(/^[^\d.-]+/);
+            const symbol = symbolMatch ? symbolMatch[0] : '';
+            const n = this.selectedTotal();
+            const formatted = Number.isInteger(n) ? String(n) : n.toFixed(2);
+            return symbol + formatted;
         },
         emitCatalogTotal() {
             this.$dispatch('package-services-changed', { total: this.selectedTotal() });

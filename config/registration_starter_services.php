@@ -49,6 +49,34 @@ return [
         ['key' => 'cleanup-wax-combo', 'name' => 'Cleanup + Wax Combo', 'category' => 'Packages & Combos', 'category_slug' => 'packages-combos', 'duration_minutes' => 80, 'price' => 70.00, 'buffer_minutes' => 10],
         ['key' => 'monthly-maintenance-package', 'name' => 'Monthly Maintenance Package', 'category' => 'Packages & Combos', 'category_slug' => 'packages-combos', 'duration_minutes' => 120, 'price' => 120.00, 'buffer_minutes' => 15],
         ['key' => 'custom-package', 'name' => 'Custom Package (build your own)', 'category' => 'Packages & Combos', 'category_slug' => 'packages-combos', 'duration_minutes' => 120, 'price' => 130.00, 'buffer_minutes' => 15],
+
+        // Nail Studio
+        ['key' => 'acrylic-extensions', 'name' => 'Acrylic Extensions', 'category' => 'Nail Studio', 'category_slug' => 'nail-studio', 'duration_minutes' => 90, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'gel-nail-extensions', 'name' => 'Gel Nail Extensions', 'category' => 'Nail Studio', 'category_slug' => 'nail-studio', 'duration_minutes' => 90, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'nail-art-design', 'name' => 'Nail Art & Design', 'category' => 'Nail Studio', 'category_slug' => 'nail-studio', 'duration_minutes' => 45, 'price' => 25.00, 'buffer_minutes' => 5],
+        ['key' => 'gel-polish-manicures', 'name' => 'Gel Polish & Manicures', 'category' => 'Nail Studio', 'category_slug' => 'nail-studio', 'duration_minutes' => 45, 'price' => 30.00, 'buffer_minutes' => 5],
+        ['key' => 'pedicures-studio', 'name' => 'Pedicures', 'category' => 'Nail Studio', 'category_slug' => 'nail-studio', 'duration_minutes' => 45, 'price' => 30.00, 'buffer_minutes' => 5],
+        ['key' => 'infill-removals', 'name' => 'Infill & Removals', 'category' => 'Nail Studio', 'category_slug' => 'nail-studio', 'duration_minutes' => 60, 'price' => 35.00, 'buffer_minutes' => 10],
+
+        // Lash Bar
+        ['key' => 'classic-extensions', 'name' => 'Classic Extensions', 'category' => 'Lash Bar', 'category_slug' => 'lash-bar', 'duration_minutes' => 90, 'price' => 65.00, 'buffer_minutes' => 10],
+        ['key' => 'volume-hybrid-lashes', 'name' => 'Volume & Hybrid Lashes', 'category' => 'Lash Bar', 'category_slug' => 'lash-bar', 'duration_minutes' => 120, 'price' => 85.00, 'buffer_minutes' => 10],
+        ['key' => 'lash-lift-tint', 'name' => 'Lash Lift & Tint', 'category' => 'Lash Bar', 'category_slug' => 'lash-bar', 'duration_minutes' => 60, 'price' => 45.00, 'buffer_minutes' => 10],
+        ['key' => 'lash-refills-removal', 'name' => 'Refills & Removal', 'category' => 'Lash Bar', 'category_slug' => 'lash-bar', 'duration_minutes' => 45, 'price' => 35.00, 'buffer_minutes' => 10],
+
+        // Brow Architecture
+        ['key' => 'brow-lamination', 'name' => 'Brow Lamination', 'category' => 'Brow Architecture', 'category_slug' => 'brow-architecture', 'duration_minutes' => 60, 'price' => 45.00, 'buffer_minutes' => 10],
+        ['key' => 'microblading-shading', 'name' => 'Microblading & Shading', 'category' => 'Brow Architecture', 'category_slug' => 'brow-architecture', 'duration_minutes' => 120, 'price' => 180.00, 'buffer_minutes' => 15],
+        ['key' => 'brow-tinting-shaping', 'name' => 'Brow Tinting & Shaping', 'category' => 'Brow Architecture', 'category_slug' => 'brow-architecture', 'duration_minutes' => 40, 'price' => 28.00, 'buffer_minutes' => 5],
+
+        // Semi-Permanent Makeup
+        ['key' => 'lip-blush', 'name' => 'Lip Blush', 'category' => 'Semi-Permanent Makeup', 'category_slug' => 'semi-permanent-makeup', 'duration_minutes' => 120, 'price' => 180.00, 'buffer_minutes' => 15],
+        ['key' => 'permanent-eyeliner', 'name' => 'Permanent Eyeliner', 'category' => 'Semi-Permanent Makeup', 'category_slug' => 'semi-permanent-makeup', 'duration_minutes' => 90, 'price' => 150.00, 'buffer_minutes' => 15],
+        ['key' => 'beauty-spot-corrections', 'name' => 'Beauty Spot & Corrections', 'category' => 'Semi-Permanent Makeup', 'category_slug' => 'semi-permanent-makeup', 'duration_minutes' => 60, 'price' => 80.00, 'buffer_minutes' => 10],
+
+        // Hair & Aesthetic Add-ons
+        ['key' => 'hair-extensions', 'name' => 'Hair Extensions', 'category' => 'Hair & Aesthetic Add-ons', 'category_slug' => 'hair-aesthetic-add-ons', 'duration_minutes' => 120, 'price' => 150.00, 'buffer_minutes' => 15],
+        ['key' => 'hair-styling-care', 'name' => 'Hair Styling & Care', 'category' => 'Hair & Aesthetic Add-ons', 'category_slug' => 'hair-aesthetic-add-ons', 'duration_minutes' => 45, 'price' => 35.00, 'buffer_minutes' => 10],
     ],
     'mans' => [
         ['key' => 'haircut', 'name' => 'Haircut', 'category' => 'Haircuts & Styling', 'category_slug' => 'haircuts-styling', 'duration_minutes' => 30, 'price' => 35.00, 'buffer_minutes' => 10],
@@ -111,6 +139,138 @@ return [
         ['key' => 'party-makeup-unisex', 'name' => 'Party Makeup', 'category' => 'Special Occasion / Bridal Grooming', 'category_slug' => 'special-occasion-bridal-grooming', 'duration_minutes' => 90, 'price' => 120.00, 'buffer_minutes' => 15],
         ['key' => 'hairstyling-unisex', 'name' => 'Hairstyling', 'category' => 'Special Occasion / Bridal Grooming', 'category_slug' => 'special-occasion-bridal-grooming', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
         ['key' => 'saree-draping-unisex', 'name' => 'Saree Draping', 'category' => 'Special Occasion / Bridal Grooming', 'category_slug' => 'special-occasion-bridal-grooming', 'duration_minutes' => 40, 'price' => 50.00, 'buffer_minutes' => 10],
+
+        // Relaxation Massage
+        ['key' => 'swedish-massage', 'name' => 'Swedish Massage', 'category' => 'Relaxation Massage', 'category_slug' => 'relaxation-massage', 'duration_minutes' => 60, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'aromatherapy-massage', 'name' => 'Aromatherapy Massage', 'category' => 'Relaxation Massage', 'category_slug' => 'relaxation-massage', 'duration_minutes' => 60, 'price' => 60.00, 'buffer_minutes' => 10],
+        ['key' => 'relaxation-massage', 'name' => 'Relaxation Massage', 'category' => 'Relaxation Massage', 'category_slug' => 'relaxation-massage', 'duration_minutes' => 60, 'price' => 50.00, 'buffer_minutes' => 10],
+        ['key' => 'candle-massage', 'name' => 'Candle Massage', 'category' => 'Relaxation Massage', 'category_slug' => 'relaxation-massage', 'duration_minutes' => 60, 'price' => 65.00, 'buffer_minutes' => 10],
+
+        // Deep & Therapeutic
+        ['key' => 'deep-tissue-massage', 'name' => 'Deep Tissue Massage', 'category' => 'Deep & Therapeutic', 'category_slug' => 'deep-therapeutic', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+        ['key' => 'sports-massage', 'name' => 'Sports Massage', 'category' => 'Deep & Therapeutic', 'category_slug' => 'deep-therapeutic', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+        ['key' => 'trigger-point-therapy', 'name' => 'Trigger Point Therapy', 'category' => 'Deep & Therapeutic', 'category_slug' => 'deep-therapeutic', 'duration_minutes' => 45, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'myofascial-release', 'name' => 'Myofascial Release', 'category' => 'Deep & Therapeutic', 'category_slug' => 'deep-therapeutic', 'duration_minutes' => 60, 'price' => 65.00, 'buffer_minutes' => 10],
+
+        // Asian / Eastern
+        ['key' => 'thai-massage', 'name' => 'Thai Massage', 'category' => 'Asian / Eastern', 'category_slug' => 'asian-eastern', 'duration_minutes' => 75, 'price' => 70.00, 'buffer_minutes' => 10],
+        ['key' => 'balinese-massage', 'name' => 'Balinese Massage', 'category' => 'Asian / Eastern', 'category_slug' => 'asian-eastern', 'duration_minutes' => 60, 'price' => 65.00, 'buffer_minutes' => 10],
+        ['key' => 'shiatsu', 'name' => 'Shiatsu', 'category' => 'Asian / Eastern', 'category_slug' => 'asian-eastern', 'duration_minutes' => 60, 'price' => 60.00, 'buffer_minutes' => 10],
+        ['key' => 'tui-na', 'name' => 'Tui Na', 'category' => 'Asian / Eastern', 'category_slug' => 'asian-eastern', 'duration_minutes' => 60, 'price' => 60.00, 'buffer_minutes' => 10],
+
+        // Indian / Ayurvedic
+        ['key' => 'abhyanga', 'name' => 'Abhyanga', 'category' => 'Indian / Ayurvedic', 'category_slug' => 'indian-ayurvedic', 'duration_minutes' => 60, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'shiro-abhyanga', 'name' => 'Shiro Abhyanga', 'category' => 'Indian / Ayurvedic', 'category_slug' => 'indian-ayurvedic', 'duration_minutes' => 45, 'price' => 40.00, 'buffer_minutes' => 10],
+        ['key' => 'pada-abhyanga', 'name' => 'Pada Abhyanga', 'category' => 'Indian / Ayurvedic', 'category_slug' => 'indian-ayurvedic', 'duration_minutes' => 30, 'price' => 30.00, 'buffer_minutes' => 5],
+        ['key' => 'marma-massage', 'name' => 'Marma Massage', 'category' => 'Indian / Ayurvedic', 'category_slug' => 'indian-ayurvedic', 'duration_minutes' => 60, 'price' => 60.00, 'buffer_minutes' => 10],
+        ['key' => 'udvartana', 'name' => 'Udvartana', 'category' => 'Indian / Ayurvedic', 'category_slug' => 'indian-ayurvedic', 'duration_minutes' => 45, 'price' => 50.00, 'buffer_minutes' => 10],
+
+        // Hot / Warm Therapies
+        ['key' => 'hot-stone-massage', 'name' => 'Hot Stone Massage', 'category' => 'Hot / Warm Therapies', 'category_slug' => 'hot-warm-therapies', 'duration_minutes' => 75, 'price' => 80.00, 'buffer_minutes' => 10],
+        ['key' => 'warm-bamboo-massage', 'name' => 'Warm Bamboo Massage', 'category' => 'Hot / Warm Therapies', 'category_slug' => 'hot-warm-therapies', 'duration_minutes' => 60, 'price' => 75.00, 'buffer_minutes' => 10],
+        ['key' => 'herbal-compress-massage', 'name' => 'Herbal Compress Massage', 'category' => 'Hot / Warm Therapies', 'category_slug' => 'hot-warm-therapies', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+
+        // Lymphatic & Circulatory
+        ['key' => 'manual-lymphatic-drainage', 'name' => 'Manual Lymphatic Drainage', 'category' => 'Lymphatic & Circulatory', 'category_slug' => 'lymphatic-circulatory', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+        ['key' => 'lymphatic-massage', 'name' => 'Lymphatic Massage', 'category' => 'Lymphatic & Circulatory', 'category_slug' => 'lymphatic-circulatory', 'duration_minutes' => 60, 'price' => 65.00, 'buffer_minutes' => 10],
+
+        // Reflexology & Pressure Point
+        ['key' => 'foot-reflexology', 'name' => 'Foot Reflexology', 'category' => 'Reflexology & Pressure Point', 'category_slug' => 'reflexology-pressure-point', 'duration_minutes' => 45, 'price' => 40.00, 'buffer_minutes' => 10],
+        ['key' => 'hand-reflexology', 'name' => 'Hand Reflexology', 'category' => 'Reflexology & Pressure Point', 'category_slug' => 'reflexology-pressure-point', 'duration_minutes' => 30, 'price' => 30.00, 'buffer_minutes' => 5],
+        ['key' => 'acupressure', 'name' => 'Acupressure', 'category' => 'Reflexology & Pressure Point', 'category_slug' => 'reflexology-pressure-point', 'duration_minutes' => 45, 'price' => 40.00, 'buffer_minutes' => 10],
+
+        // Head, Face & Upper Body
+        ['key' => 'head-massage-unisex', 'name' => 'Head Massage', 'category' => 'Head, Face & Upper Body', 'category_slug' => 'head-face-upper-body', 'duration_minutes' => 30, 'price' => 25.00, 'buffer_minutes' => 5],
+        ['key' => 'scalp-massage', 'name' => 'Scalp Massage', 'category' => 'Head, Face & Upper Body', 'category_slug' => 'head-face-upper-body', 'duration_minutes' => 30, 'price' => 25.00, 'buffer_minutes' => 5],
+        ['key' => 'neck-shoulder-massage', 'name' => 'Neck & Shoulder Massage', 'category' => 'Head, Face & Upper Body', 'category_slug' => 'head-face-upper-body', 'duration_minutes' => 40, 'price' => 35.00, 'buffer_minutes' => 10],
+        ['key' => 'back-massage', 'name' => 'Back Massage', 'category' => 'Head, Face & Upper Body', 'category_slug' => 'head-face-upper-body', 'duration_minutes' => 45, 'price' => 40.00, 'buffer_minutes' => 10],
+
+        // Couples & Multi-Therapist
+        ['key' => 'couples-massage', 'name' => 'Couples Massage', 'category' => 'Couples & Multi-Therapist', 'category_slug' => 'couples-multi-therapist', 'duration_minutes' => 60, 'price' => 120.00, 'buffer_minutes' => 15],
+        ['key' => 'four-hand-massage', 'name' => 'Four-Hand Massage', 'category' => 'Couples & Multi-Therapist', 'category_slug' => 'couples-multi-therapist', 'duration_minutes' => 60, 'price' => 140.00, 'buffer_minutes' => 15],
+
+        // Prenatal / Postnatal
+        ['key' => 'prenatal-massage', 'name' => 'Prenatal Massage', 'category' => 'Prenatal / Postnatal', 'category_slug' => 'prenatal-postnatal', 'duration_minutes' => 60, 'price' => 65.00, 'buffer_minutes' => 10],
+        ['key' => 'postnatal-massage', 'name' => 'Postnatal Massage', 'category' => 'Prenatal / Postnatal', 'category_slug' => 'prenatal-postnatal', 'duration_minutes' => 60, 'price' => 65.00, 'buffer_minutes' => 10],
+
+        // Sports & Recovery
+        ['key' => 'athlete-recovery-massage', 'name' => 'Athlete Recovery Massage', 'category' => 'Sports & Recovery', 'category_slug' => 'sports-recovery', 'duration_minutes' => 60, 'price' => 75.00, 'buffer_minutes' => 10],
+        ['key' => 'stretching-therapy', 'name' => 'Stretching Therapy', 'category' => 'Sports & Recovery', 'category_slug' => 'sports-recovery', 'duration_minutes' => 45, 'price' => 45.00, 'buffer_minutes' => 10],
+        ['key' => 'mobility-massage', 'name' => 'Mobility Massage', 'category' => 'Sports & Recovery', 'category_slug' => 'sports-recovery', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+
+        // Body Scrub & Exfoliation
+        ['key' => 'body-scrub', 'name' => 'Body Scrub', 'category' => 'Body Scrub & Exfoliation', 'category_slug' => 'body-scrub-exfoliation', 'duration_minutes' => 45, 'price' => 45.00, 'buffer_minutes' => 10],
+        ['key' => 'body-polish', 'name' => 'Body Polish', 'category' => 'Body Scrub & Exfoliation', 'category_slug' => 'body-scrub-exfoliation', 'duration_minutes' => 45, 'price' => 50.00, 'buffer_minutes' => 10],
+        ['key' => 'coffee-scrub', 'name' => 'Coffee Scrub', 'category' => 'Body Scrub & Exfoliation', 'category_slug' => 'body-scrub-exfoliation', 'duration_minutes' => 45, 'price' => 48.00, 'buffer_minutes' => 10],
+        ['key' => 'salt-scrub', 'name' => 'Salt Scrub', 'category' => 'Body Scrub & Exfoliation', 'category_slug' => 'body-scrub-exfoliation', 'duration_minutes' => 45, 'price' => 48.00, 'buffer_minutes' => 10],
+        ['key' => 'sugar-scrub', 'name' => 'Sugar Scrub', 'category' => 'Body Scrub & Exfoliation', 'category_slug' => 'body-scrub-exfoliation', 'duration_minutes' => 45, 'price' => 48.00, 'buffer_minutes' => 10],
+
+        // Body Wraps & Masks
+        ['key' => 'body-wrap', 'name' => 'Body Wrap', 'category' => 'Body Wraps & Masks', 'category_slug' => 'body-wraps-masks', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+        ['key' => 'mud-wrap', 'name' => 'Mud Wrap', 'category' => 'Body Wraps & Masks', 'category_slug' => 'body-wraps-masks', 'duration_minutes' => 60, 'price' => 75.00, 'buffer_minutes' => 10],
+        ['key' => 'clay-wrap', 'name' => 'Clay Wrap', 'category' => 'Body Wraps & Masks', 'category_slug' => 'body-wraps-masks', 'duration_minutes' => 60, 'price' => 75.00, 'buffer_minutes' => 10],
+        ['key' => 'algae-wrap', 'name' => 'Algae Wrap', 'category' => 'Body Wraps & Masks', 'category_slug' => 'body-wraps-masks', 'duration_minutes' => 60, 'price' => 80.00, 'buffer_minutes' => 10],
+        ['key' => 'chocolate-wrap', 'name' => 'Chocolate Wrap', 'category' => 'Body Wraps & Masks', 'category_slug' => 'body-wraps-masks', 'duration_minutes' => 60, 'price' => 80.00, 'buffer_minutes' => 10],
+
+        // Hydrotherapy
+        ['key' => 'jacuzzi-whirlpool', 'name' => 'Jacuzzi / Whirlpool', 'category' => 'Hydrotherapy', 'category_slug' => 'hydrotherapy', 'duration_minutes' => 30, 'price' => 40.00, 'buffer_minutes' => 10],
+        ['key' => 'hydro-massage', 'name' => 'Hydro Massage', 'category' => 'Hydrotherapy', 'category_slug' => 'hydrotherapy', 'duration_minutes' => 45, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'vichy-shower', 'name' => 'Vichy Shower', 'category' => 'Hydrotherapy', 'category_slug' => 'hydrotherapy', 'duration_minutes' => 30, 'price' => 50.00, 'buffer_minutes' => 10],
+        ['key' => 'contrast-therapy', 'name' => 'Contrast Therapy', 'category' => 'Hydrotherapy', 'category_slug' => 'hydrotherapy', 'duration_minutes' => 30, 'price' => 45.00, 'buffer_minutes' => 10],
+
+        // Sauna & Steam
+        ['key' => 'sauna', 'name' => 'Sauna', 'category' => 'Sauna & Steam', 'category_slug' => 'sauna-steam', 'duration_minutes' => 30, 'price' => 35.00, 'buffer_minutes' => 5],
+        ['key' => 'steam-bath', 'name' => 'Steam Bath', 'category' => 'Sauna & Steam', 'category_slug' => 'sauna-steam', 'duration_minutes' => 30, 'price' => 35.00, 'buffer_minutes' => 5],
+        ['key' => 'turkish-hammam', 'name' => 'Turkish Hammam', 'category' => 'Sauna & Steam', 'category_slug' => 'sauna-steam', 'duration_minutes' => 45, 'price' => 55.00, 'buffer_minutes' => 10],
+
+        // Thermal / Mineral
+        ['key' => 'thermal-bath', 'name' => 'Thermal Bath', 'category' => 'Thermal / Mineral', 'category_slug' => 'thermal-mineral', 'duration_minutes' => 45, 'price' => 50.00, 'buffer_minutes' => 10],
+        ['key' => 'mineral-bath', 'name' => 'Mineral Bath', 'category' => 'Thermal / Mineral', 'category_slug' => 'thermal-mineral', 'duration_minutes' => 45, 'price' => 50.00, 'buffer_minutes' => 10],
+        ['key' => 'thalassotherapy', 'name' => 'Thalassotherapy', 'category' => 'Thermal / Mineral', 'category_slug' => 'thermal-mineral', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+
+        // Facial Spa
+        ['key' => 'classic-facial', 'name' => 'Classic Facial', 'category' => 'Facial Spa', 'category_slug' => 'facial-spa', 'duration_minutes' => 50, 'price' => 50.00, 'buffer_minutes' => 10],
+        ['key' => 'hydrating-facial', 'name' => 'Hydrating Facial', 'category' => 'Facial Spa', 'category_slug' => 'facial-spa', 'duration_minutes' => 55, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'anti-aging-facial-unisex', 'name' => 'Anti-Aging Facial', 'category' => 'Facial Spa', 'category_slug' => 'facial-spa', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+        ['key' => 'acne-facial', 'name' => 'Acne Facial', 'category' => 'Facial Spa', 'category_slug' => 'facial-spa', 'duration_minutes' => 55, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'brightening-facial-unisex', 'name' => 'Brightening Facial', 'category' => 'Facial Spa', 'category_slug' => 'facial-spa', 'duration_minutes' => 55, 'price' => 58.00, 'buffer_minutes' => 10],
+
+        // Advanced Facial
+        ['key' => 'gua-sha-facial', 'name' => 'Gua Sha Facial', 'category' => 'Advanced Facial', 'category_slug' => 'advanced-facial', 'duration_minutes' => 50, 'price' => 60.00, 'buffer_minutes' => 10],
+        ['key' => 'face-cupping', 'name' => 'Face Cupping', 'category' => 'Advanced Facial', 'category_slug' => 'advanced-facial', 'duration_minutes' => 45, 'price' => 55.00, 'buffer_minutes' => 10],
+        ['key' => 'microdermabrasion', 'name' => 'Microdermabrasion', 'category' => 'Advanced Facial', 'category_slug' => 'advanced-facial', 'duration_minutes' => 45, 'price' => 65.00, 'buffer_minutes' => 10],
+        ['key' => 'hydra-facial-unisex', 'name' => 'Hydra Facial', 'category' => 'Advanced Facial', 'category_slug' => 'advanced-facial', 'duration_minutes' => 55, 'price' => 75.00, 'buffer_minutes' => 10],
+
+        // Hair & Scalp Spa (Hair Spa already exists under Hair Treatments — skipped)
+        ['key' => 'scalp-treatment', 'name' => 'Scalp Treatment', 'category' => 'Hair & Scalp Spa', 'category_slug' => 'hair-scalp-spa', 'duration_minutes' => 45, 'price' => 45.00, 'buffer_minutes' => 10],
+        ['key' => 'japanese-head-spa', 'name' => 'Japanese Head Spa', 'category' => 'Hair & Scalp Spa', 'category_slug' => 'hair-scalp-spa', 'duration_minutes' => 60, 'price' => 70.00, 'buffer_minutes' => 10],
+        ['key' => 'hair-scalp-detox', 'name' => 'Hair & Scalp Detox', 'category' => 'Hair & Scalp Spa', 'category_slug' => 'hair-scalp-spa', 'duration_minutes' => 60, 'price' => 65.00, 'buffer_minutes' => 10],
+
+        // Recovery (Contrast Therapy already exists under Hydrotherapy — skipped)
+        ['key' => 'cold-plunge', 'name' => 'Cold Plunge', 'category' => 'Recovery', 'category_slug' => 'recovery', 'duration_minutes' => 20, 'price' => 30.00, 'buffer_minutes' => 5],
+        ['key' => 'ice-bath', 'name' => 'Ice Bath', 'category' => 'Recovery', 'category_slug' => 'recovery', 'duration_minutes' => 20, 'price' => 30.00, 'buffer_minutes' => 5],
+        ['key' => 'cryotherapy', 'name' => 'Cryotherapy', 'category' => 'Recovery', 'category_slug' => 'recovery', 'duration_minutes' => 20, 'price' => 45.00, 'buffer_minutes' => 5],
+
+        // Mind & Holistic
+        ['key' => 'meditation', 'name' => 'Meditation', 'category' => 'Mind & Holistic', 'category_slug' => 'mind-holistic', 'duration_minutes' => 45, 'price' => 35.00, 'buffer_minutes' => 5],
+        ['key' => 'breathwork', 'name' => 'Breathwork', 'category' => 'Mind & Holistic', 'category_slug' => 'mind-holistic', 'duration_minutes' => 45, 'price' => 35.00, 'buffer_minutes' => 5],
+        ['key' => 'yoga', 'name' => 'Yoga', 'category' => 'Mind & Holistic', 'category_slug' => 'mind-holistic', 'duration_minutes' => 60, 'price' => 40.00, 'buffer_minutes' => 5],
+        ['key' => 'sound-bath', 'name' => 'Sound Bath', 'category' => 'Mind & Holistic', 'category_slug' => 'mind-holistic', 'duration_minutes' => 45, 'price' => 40.00, 'buffer_minutes' => 5],
+        ['key' => 'reiki', 'name' => 'Reiki', 'category' => 'Mind & Holistic', 'category_slug' => 'mind-holistic', 'duration_minutes' => 45, 'price' => 50.00, 'buffer_minutes' => 5],
+
+        // Luxury Experiences
+        ['key' => 'signature-massage', 'name' => 'Signature Massage', 'category' => 'Luxury Experiences', 'category_slug' => 'luxury-experiences', 'duration_minutes' => 90, 'price' => 120.00, 'buffer_minutes' => 15],
+        ['key' => 'full-body-ritual', 'name' => 'Full Body Ritual', 'category' => 'Luxury Experiences', 'category_slug' => 'luxury-experiences', 'duration_minutes' => 120, 'price' => 150.00, 'buffer_minutes' => 15],
+        ['key' => 'spa-journey', 'name' => 'Spa Journey', 'category' => 'Luxury Experiences', 'category_slug' => 'luxury-experiences', 'duration_minutes' => 150, 'price' => 180.00, 'buffer_minutes' => 15],
+        ['key' => 'private-spa-experience', 'name' => 'Private Spa Experience', 'category' => 'Luxury Experiences', 'category_slug' => 'luxury-experiences', 'duration_minutes' => 180, 'price' => 250.00, 'buffer_minutes' => 15],
+
+        // Mobile Spa
+        ['key' => 'mobile-massage', 'name' => 'Mobile Massage', 'category' => 'Mobile Spa', 'category_slug' => 'mobile-spa', 'duration_minutes' => 60, 'price' => 80.00, 'buffer_minutes' => 15],
+        ['key' => 'corporate-massage', 'name' => 'Corporate Massage', 'category' => 'Mobile Spa', 'category_slug' => 'mobile-spa', 'duration_minutes' => 30, 'price' => 50.00, 'buffer_minutes' => 10],
+        ['key' => 'event-massage', 'name' => 'Event Massage', 'category' => 'Mobile Spa', 'category_slug' => 'mobile-spa', 'duration_minutes' => 30, 'price' => 55.00, 'buffer_minutes' => 10],
+
+        // Bridal
+        ['key' => 'bridal-spa', 'name' => 'Bridal Spa', 'category' => 'Bridal', 'category_slug' => 'bridal', 'duration_minutes' => 120, 'price' => 180.00, 'buffer_minutes' => 15],
     ],
     'pet' => [
         ['key' => 'pet-bathing', 'name' => 'Bathing', 'category' => 'Bath & Basic Cleaning', 'category_slug' => 'bath-basic-cleaning', 'duration_minutes' => 30, 'price' => 20.00, 'buffer_minutes' => 5],
